@@ -53,7 +53,7 @@ const Booking = () => {
       try {
         // Make GET request to fetch bookings for the selected view
         const response = await axios.get<BookingItem[]>(
-          `http://localhost:5125/api/AdminBooking?status=${currentView}`
+          `http://localhost:5127/api/AdminBooking?status=${currentView}`
         );
         setBookingData(response.data); // Store the received bookings
       } catch (err) {
@@ -114,12 +114,10 @@ const Booking = () => {
   return (
     <div className="booking-wrapper">
       {/* Back Button */}
-      <div>
       <button className="back-button" onClick={() => navigate(-1)}>
         <img src={back} alt="Back" />
         Booking
       </button>
-      </div>
 
       {/* Top section: view selector and export button */}
       <div className="booking-content">
