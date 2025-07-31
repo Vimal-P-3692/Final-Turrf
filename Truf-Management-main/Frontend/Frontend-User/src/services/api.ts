@@ -155,7 +155,8 @@ export const bookSlot = async (
     if (response.ok) {
       // Booking successful, now call the cleanup API
       const cleanupResponse = await fetch(
-        "https://api.turrfzone.com/api/Booking/cleanup-slots",
+        // "https://api.turrfzone.com/api/Booking/cleanup-slots",
+        "http://localhost:5125/api/Booking/cleanup-slots",
         {
           method: "POST", // or "GET" based on your API
           headers: {

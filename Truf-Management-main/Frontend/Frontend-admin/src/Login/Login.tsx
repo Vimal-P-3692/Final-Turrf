@@ -1,16 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/config";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Logo from "../assets/logo.png";
 import "./Login.css";
-
-// Extend Window interface to include recaptchaVerifier
-declare global {
-  interface Window {
-    recaptchaVerifier: RecaptchaVerifier;
-  }
-}
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -25,7 +16,6 @@ function Login() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const [otpTimer, setOtpTimer] = useState(300);
   const [timerActive, setTimerActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -34,14 +24,13 @@ function Login() {
   const sendSMS = async () => {
     try {
       console.log("Sending SMS to:", phoneNumber);
-      const response = await fetch("http://localhost:5126/generate", {
+      const response = await fetch("http://localhost:5126/admin/otp/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': 'Bearer YOUR_API_KEY', // add if needed
         },
         body: JSON.stringify({
-          phone: "8778879866",
+          phone: "8072832018",
         }),
       });
 
@@ -62,12 +51,12 @@ function Login() {
 
   const verifyOtp = async () => {
     try {
-      const phonenumber = phoneNumber; // make sure formData.phone is defined
+      const phonenumber = "8072832018"; // make sure formData.phone is defined
       const otp = formData.otp; // make sure formData.otp is defined
 
       console.log("Sending verify request:", { phonenumber, otp });
 
-      const response = await fetch("http://localhost:5126/verify", {
+      const response = await fetch("http://localhost:5126/admin/otp/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,51 +88,6 @@ function Login() {
       return false;
     }
   };
-
-  useEffect(() => {
-    const initializeRecaptcha = () => {
-      try {
-        if (
-          !window.recaptchaVerifier &&
-          document.getElementById("recaptcha-container")
-        ) {
-          window.recaptchaVerifier = new RecaptchaVerifier(
-            auth,
-            "recaptcha-container",
-            {
-              size: "normal",
-              callback: () => {
-                setRecaptchaVerified(true);
-                setError("");
-              },
-              "expired-callback": () => {
-                setRecaptchaVerified(false);
-                setError("reCAPTCHA expired. Please verify again.");
-              },
-            }
-          );
-
-          window.recaptchaVerifier.render().catch(() => {
-            setError("Failed to load reCAPTCHA. Please refresh the page.");
-          });
-        }
-      } catch (error) {
-        setError("Failed to initialize reCAPTCHA. Please refresh the page.");
-      }
-    };
-
-    const timeout = setTimeout(initializeRecaptcha, 1000);
-
-    return () => {
-      clearTimeout(timeout);
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-          // delete window.recaptchaVerifier?;
-        } catch {}
-      }
-    };
-  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -183,18 +127,6 @@ function Login() {
     setLoading(true);
     setError("");
 
-    if (!recaptchaVerified) {
-      setError("Please complete the reCAPTCHA verification.");
-      setLoading(false);
-      return;
-    }
-
-    // const fullPhone = `+91${phoneNumber}`;
-
-    // try {
-    //   await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
-    // } catch {}
-
     setCurrentStep("phone-verify");
     setOtpTimer(300);
     setTimerActive(true);
@@ -222,17 +154,23 @@ function Login() {
     const result = await verifyOtp();
     console.log("OTP verification result:", result);
 
-    setTimerActive(false);
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        phone: formData.phoneNumber,
-        isAuthenticated: true,
-      })
-    );
-    window.dispatchEvent(new CustomEvent("userLogin"));
-    navigate("/");
-    setLoading(false);
+    if (result) {
+      setTimerActive(false);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          phone: phoneNumber,
+          username: formData.username,
+          isAuthenticated: true,
+        })
+      );
+      window.dispatchEvent(new CustomEvent("userLogin"));
+      navigate("/admin/dashboard");
+      setLoading(false);
+    } else {
+      alert("Invalid otp");
+      setLoading(false);
+    }
   };
 
   const handleResendOTP = async () => {
@@ -240,8 +178,7 @@ function Login() {
     setError("");
 
     try {
-      const fullPhone = `+91${formData.phoneNumber}`;
-      await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
+      await sendSMS();
       setOtpTimer(300);
       setTimerActive(true);
       setError("");
@@ -261,7 +198,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "http://localhost:5127/api/AdminLogin/validate",
+        "https://admin-api.turrfzone.com/api/AdminLogin/validate",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -321,16 +258,12 @@ function Login() {
                   required
                 />
               </div>
-              <div className="recaptcha-wrapper">
-                <div id="recaptcha-container"></div>
-              </div>
               {error && <p className="error-message">{error}</p>}
               <button
                 type="submit"
-                disabled={loading || !recaptchaVerified}
+                disabled={loading}
                 className="submit-btn"
                 onClick={handleValidatePassword}
-                style={{ opacity: recaptchaVerified ? 1 : 0.6 }}
               >
                 {loading ? "Sending OTP..." : "Send OTP"}
               </button>
