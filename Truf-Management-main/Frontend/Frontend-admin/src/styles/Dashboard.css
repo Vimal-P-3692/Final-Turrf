@@ -1,6 +1,8 @@
 .dashboard-wrapper {
   margin-bottom: 100px;
+  padding: 20px;
   width: 100%;
+
 }
 
 .back {
@@ -90,15 +92,20 @@
   overflow-x: auto;
   overflow-y: hidden;
   min-width: 650px;
+  min-height: 400px;
   white-space: nowrap;
+}
+.recharts-surface{
+  height: 400px !important;
 }
 
 .summary-cards {
   flex: 1;
-  min-width: 240px;
+  min-width: 260px;
   max-width: 280px;
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
   gap: 20px;
 }
 
@@ -215,7 +222,9 @@
 
   .filter-bar {
     margin: 0.5rem;
+
   }
+  
 
   .navigator,
   .dropdown-container {
@@ -227,7 +236,7 @@
   .filter-select {
     font-size: 0.9rem;
     padding: 4px 8px;
-    width: 100%;
+    width: 40%;
   }
 
   .total-info {
@@ -262,6 +271,7 @@
   /* Recharts font tweaks */
   .recharts-tooltip-wrapper {
     font-size: 0.75rem !important;
+
   }
 
   .recharts-default-tooltip {

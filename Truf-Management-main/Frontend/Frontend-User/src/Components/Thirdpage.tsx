@@ -328,7 +328,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       const isoDateTime =
         typeof dateTime === "string" ? dateTime : dateTime.toISOString();
 
-      const response = await fetch("https://otp.turrfzone.com/booking", {
+      const response = await fetch("https://otp.localhost/booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

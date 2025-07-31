@@ -43,11 +43,11 @@ function Dashboard() {
 
         if (filter === "Year") {
           const year = currentDate.year();
-          url = `http://localhost:5127/api/AdminDashboard/year?year=${year}`;
+          url = `https://admin-api.turrfzone.com/api/AdminDashboard/year?year=${year}`;
         } else {
           const month = currentDate.month() + 1;
           const year = currentDate.year();
-          url = `http://localhost:5127/api/AdminDashboard/month?month=${month}&year=${year}`;
+          url = `https://admin-api.turrfzone.com/api/AdminDashboard/month?month=${month}&year=${year}`;
         }
 
         const response = await fetch(url);
@@ -77,7 +77,7 @@ function Dashboard() {
     const fetchSummaryData = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5127/api/AdminDashboard/summary"
+          "https://admin-api.turrfzone.com/api/AdminDashboard/summary"
         );
         const data = await res.json();
 
@@ -147,6 +147,7 @@ function Dashboard() {
             <option value="Year">Year</option>
           </select>
         </div>
+        <div></div>
       </div>
 
       {/* ✅ Filter-based total summary */}
