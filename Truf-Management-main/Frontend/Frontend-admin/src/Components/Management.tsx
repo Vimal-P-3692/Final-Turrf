@@ -288,11 +288,35 @@ const Management = () => {
     if (!isPastDate(d)) setClickedDate(d);
   };
 
+  // Check if a slot's time is in the past (only applies to today)
+  const isPastSlot = (slot: Slot): boolean => {
+    if (!clickedDate) return false;
+
+    // Only apply to today
+    if (clickedDate.toDateString() !== today.toDateString()) return false;
+
+    const [hourStr, period] = slot.startTime!.split(" ");
+    let hour = parseInt(hourStr);
+
+    // Convert to 24-hour format
+    if (period === "PM" && hour !== 12) hour += 12;
+    if (period === "AM" && hour === 12) hour = 0;
+
+    const now = new Date();
+    const currentHour = now.getHours(); // 0–23
+
+    return hour < currentHour;
+  };
+
   // Handle slot click - different behavior based on slot status
   const handleSlotClick = (idx: number) => {
     const slot = slots[idx];
 
-    // Open appropriate popup based on slot status
+    // 🔴 Block interaction with past time slots on today
+    if (isPastSlot(slot)) {
+      return; // Do nothing
+    }
+
     if (slot.status === "maintenance") {
       setPopupSlotIndex(idx);
       return;
@@ -305,7 +329,7 @@ const Management = () => {
       return;
     }
 
-    // Toggle slot selection for available slots
+    // Toggle selection for available slots
     setSelectedSlots((prev) =>
       prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
     );
@@ -419,7 +443,7 @@ const Management = () => {
             }}
             className={`slot-box ${slot.status} ${
               selectedSlots.includes(i) ? "selected" : ""
-            }`}
+            } ${isPastSlot(slot) ? "past-slot disabled" : ""}`}
             onClick={() => handleSlotClick(i)}
           >
             <div>{slot.time.split(" to ")[0]}</div>

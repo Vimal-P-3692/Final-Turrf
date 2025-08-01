@@ -171,7 +171,8 @@ export const bookSlot = async (
         // console.error("Cleanup failed");
       }
     } else {
-      // console.error("Booking failed");
+      alert("Booking has been failed. Please try again later.");
+      window.location.reload();
     }
 
     const result = await response.json();

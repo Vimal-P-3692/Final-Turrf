@@ -21,6 +21,25 @@ namespace turfmanagement.Controllers
         {
             using var conn = _db.GetConnection();
             conn.Open();
+            // Ensure the unique constraint exists on (SlotDate, SlotTime)
+string createConstraint = @"
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1
+            FROM pg_constraint
+            WHERE conname = 'slot_date_time_unique'
+        ) THEN
+            ALTER TABLE Slots ADD CONSTRAINT slot_date_time_unique UNIQUE (SlotDate, SlotTime);
+        END IF;
+    END $$;
+";
+
+using (var constraintCmd = new NpgsqlCommand(createConstraint, conn))
+{
+    constraintCmd.ExecuteNonQuery();
+}
+
             using var tran = conn.BeginTransaction();
 
             try
