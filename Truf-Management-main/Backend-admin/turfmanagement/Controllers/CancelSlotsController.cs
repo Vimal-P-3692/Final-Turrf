@@ -46,18 +46,32 @@ namespace turfmanagement.Controllers
 
                     try
                     {
-                        string getBookingQuery = @"
-                            SELECT UserId, BookingId
-                            FROM Bookings
-                            WHERE BookingDate = @date
-                              AND SlotTimeFrom = @time
-                            LIMIT 1;
-                        ";
+                         string getBookingQuery = @"
+                        
+                        SELECT bookingid, userid
+                        FROM bookings
+                        WHERE bookingdate = @date
+                        AND (
+                        (to_timestamp(slottimefrom, 'HH12 AM')::time < to_timestamp(slottimeto, 'HH12 AM')::time
+                        AND to_timestamp(@time, 'HH12 AM')::time >= to_timestamp(slottimefrom, 'HH12 AM')::time
+                        AND to_timestamp(@time, 'HH12 AM')::time < to_timestamp(slottimeto, 'HH12 AM')::time)
+
+                        OR
+
+                        (to_timestamp(slottimefrom, 'HH12 AM')::time > to_timestamp(slottimeto, 'HH12 AM')::time
+                        AND (
+                            to_timestamp(@time, 'HH12 AM')::time >= to_timestamp(slottimefrom, 'HH12 AM')::time
+                            OR to_timestamp(@time, 'HH12 AM')::time < to_timestamp(slottimeto, 'HH12 AM')::time
+                        ))
+                        )";
+
+                        
 
                         using (var cmd = new NpgsqlCommand(getBookingQuery, conn, tran))
                         {
                             cmd.Parameters.AddWithValue("@date", parsedDate.Date);
-                            cmd.Parameters.AddWithValue("@time", slot.SlotTime);
+                            cmd.Parameters.AddWithValue("@time", slot.SlotTime.Trim());
+
 
                             using var reader = cmd.ExecuteReader();
                             if (reader.Read())
