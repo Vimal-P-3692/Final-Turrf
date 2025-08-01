@@ -13,7 +13,7 @@ const images = [image1, image2, image3];
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const Secondpage = ({
-  onScrollToThirdPage,
+ 
 }: {
   onScrollToThirdPage: (date: Date) => void;
 }) => {
@@ -85,7 +85,7 @@ const Secondpage = ({
   // Handle user clicking a date
   const handleDateClick = (date: Date) => {
     setClickedDate(date);
-    onScrollToThirdPage(date); // Trigger scroll or update in parent component
+   
   };
 
   // Check if the given date is today

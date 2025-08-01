@@ -351,7 +351,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       }
     } catch (error) {
       console.error("Network Error:", error);
-      alert("Something went wrong while booking ❌");
+     
     }
   }
 

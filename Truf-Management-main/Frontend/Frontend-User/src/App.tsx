@@ -30,8 +30,7 @@ function App() {
   // Trigger scroll to Third Page from Second Page (user action)
   const scrollToThirdPage = (date: Date) => {
     setSelectedDate(date);
-    userTriggeredScroll.current = true; // ✅ Mark that scroll was user-initiated
-    setShouldScrollToThirdPage(true);
+ 
   };
 
   // Scroll to Thirdpage only when user explicitly triggered it
