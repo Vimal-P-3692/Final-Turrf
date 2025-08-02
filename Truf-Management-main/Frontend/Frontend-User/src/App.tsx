@@ -12,39 +12,18 @@ import Thirdpage from "./Components/Thirdpage";
 import { useRef, useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import User from "./Components/User";
-import Footer from "./Components/Footer"; // Import Footer component
+import Footer from "./Components/Footer";
 
 function App() {
   const secondPageRef = useRef<HTMLDivElement>(null);
   const thirdPageRef = useRef<HTMLDivElement>(null);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [shouldScrollToThirdPage, setShouldScrollToThirdPage] = useState(false);
   const { currentUser, loading } = useAuth();
 
-  const userTriggeredScroll = useRef(false); // ✅ Track if user action triggered scroll
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // Trigger scroll to Third Page from Second Page (user action)
-  const scrollToThirdPage = (date: Date) => {
-    setSelectedDate(date);
- 
-  };
-
-  // Scroll to Thirdpage only when user explicitly triggered it
-  useEffect(() => {
-    if (shouldScrollToThirdPage && userTriggeredScroll.current) {
-      const timer = setTimeout(() => {
-        thirdPageRef.current?.scrollIntoView({ behavior: "smooth" });
-        setShouldScrollToThirdPage(false);
-        userTriggeredScroll.current = false; // ✅ Reset after scroll
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [selectedDate, shouldScrollToThirdPage]);
 
   if (loading) {
     return (
@@ -80,19 +59,16 @@ function App() {
                 }}
               />
               <div ref={secondPageRef}>
-                <Secondpage onScrollToThirdPage={scrollToThirdPage} />
+              <Secondpage onDateClick={(date) => setSelectedDate(date)} />
               </div>
               <div ref={thirdPageRef}>
-                <Thirdpage
-                  key={selectedDate.toDateString()}
-                  selectedDate={selectedDate}
-                />
+                <Thirdpage selectedDate={selectedDate} />
                 <Footer />
               </div>
             </>
           }
         />
-          <Route path="/user" element={<User />} />
+        <Route path="/user" element={<User />} />
       </Routes>
     </Router>
   );
