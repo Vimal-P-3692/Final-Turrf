@@ -10,8 +10,7 @@ function Layout() {
     <>
       <style>{`
          * {
-            margin: 0;
-            padding: 0;
+          
             box-sizing: border-box;
          }
 
@@ -21,7 +20,7 @@ function Layout() {
 
          .layout {
            display: flex;
-           height: 100vh;
+           height:100%;
            
             background-color: white;
          }
@@ -36,6 +35,7 @@ function Layout() {
         
            margin-left: 0;
            margin-top: 30px;
+           margin-bottom:20px;
 
            border-top: 5px solid black;
            border-left: 5px solid black;

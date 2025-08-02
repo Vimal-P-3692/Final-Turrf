@@ -1,16 +1,21 @@
-// Import React and related libraries
+// Importing the React libraries
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-// Import assets and styles
+// Importing the assests
 import back from "../assets/back.svg";
 import print from "../assets/print.svg";
+
+// Importing the modules for downloading file
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+
+// Importing the css
 import "../styles/Booking.css";
 
-// Define the structure/type for booking data
+// Importing the services
+import { BookingStatusApi } from "../services/api";
+
 type BookingItem = {
   username: string;
   no: number;
@@ -22,19 +27,17 @@ type BookingItem = {
   status: string;
 };
 
-// List of available booking views (used for filtering)
 const views: ("past" | "today" | "upcoming")[] = ["past", "today", "upcoming"];
 
 const Booking = () => {
-  const navigate = useNavigate(); // For navigating back to the previous page
+  const navigate = useNavigate();
 
-  // State variables
-  const [viewIndex, setViewIndex] = useState(1); // Current selected tab index
-  const [bookingData, setBookingData] = useState<BookingItem[]>([]); // Bookings fetched from API
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(""); // Error message
+  const [viewIndex, setViewIndex] = useState(1);
+  const [bookingData, setBookingData] = useState<BookingItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [filterText, setFilterText] = useState("");
-  const currentView = views[viewIndex]; // Determine view type based on index
+  const currentView = views[viewIndex];
   const filteredData = bookingData.filter((entry) => {
     const lower = filterText.toLowerCase();
     return (
@@ -45,40 +48,31 @@ const Booking = () => {
     );
   });
 
-  // Fetch bookings from API when component loads or view changes
   useEffect(() => {
     const fetchBookings = async () => {
-      setLoading(true); // Start loading indicator
-      setError(""); // Clear previous errors
+      setLoading(true);
+      setError("");
       try {
-        // Make GET request to fetch bookings for the selected view
-        const response = await axios.get<BookingItem[]>(
-          `http://localhost:5127/api/AdminBooking?status=${currentView}`
-        );
-        setBookingData(response.data); // Store the received bookings
+        const data = await BookingStatusApi({ currentView });
+        setBookingData(data ?? []);
       } catch (err) {
-        setError("Failed to fetch bookings."); // Show error if fetch fails
+        setError("An error has been occured. Please try again later");
       } finally {
-        setLoading(false); // Stop loading indicator
+        setLoading(false);
       }
     };
-
     fetchBookings();
-  }, [currentView]); // Re-run when view changes
+  }, [currentView]); 
 
-  // Go to previous view (e.g., today → past)
   const handlePrevView = () => {
     setViewIndex((prev) => (prev === 0 ? 0 : prev - 1));
   };
 
-  // Go to next view (e.g., today → upcoming)
   const handleNextView = () => {
     setViewIndex((prev) => (prev === views.length - 1 ? prev : prev + 1));
   };
 
-  // Export bookings table to Excel file
   const handleExport = () => {
-    // Convert booking data into an array format suitable for Excel
     const data = [
       ["No", "Date", "Name", "Phone No.", "Time", "Price in ₹", "Status"],
       ...bookingData.map((item) => [
@@ -92,12 +86,10 @@ const Booking = () => {
       ]),
     ];
 
-    // Create a new Excel worksheet and workbook
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Bookings");
 
-    // Write Excel data to a Blob and trigger file download
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
@@ -106,20 +98,16 @@ const Booking = () => {
     const file = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-
-    // Download the Excel file with the current view name
     saveAs(file, `Booking_${currentView}.xlsx`);
   };
 
   return (
     <div className="booking-wrapper">
-      {/* Back Button */}
       <button className="back-button" onClick={() => navigate(-1)}>
         <img src={back} alt="Back" />
         Booking
       </button>
 
-      {/* Top section: view selector and export button */}
       <div className="booking-content">
         <input
           type="text"
@@ -129,7 +117,6 @@ const Booking = () => {
           className="search-input"
         />
 
-        {/* View Selector (Past / Today / Upcoming) */}
         <div className="date">
           <img
             src={back}
@@ -148,14 +135,12 @@ const Booking = () => {
           />
         </div>
 
-        {/* Export Button */}
         <button className="expert-button" onClick={handleExport}>
           <img src={print} alt="print" className="print-icon" />
           Export table
         </button>
       </div>
 
-      {/* Booking Table */}
       <div className="table-container">
         <table>
           <thead>
@@ -171,24 +156,20 @@ const Booking = () => {
           </thead>
           <tbody>
             {loading ? (
-              // Loading row
               <tr>
                 <td colSpan={7}>Loading...</td>
               </tr>
             ) : error ? (
-              // Error row
               <tr>
                 <td colSpan={7} style={{ color: "red" }}>
                   {error}
                 </td>
               </tr>
             ) : filteredData.length === 0 ? (
-              // No data row
               <tr>
                 <td colSpan={7}>No bookings found.</td>
               </tr>
             ) : (
-              // Render bookings
               filteredData.map((item) => (
                 <tr
                   key={item.no}

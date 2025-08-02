@@ -35,3 +35,9 @@ CREATE TABLE IF NOT EXISTS Slots (
     UNIQUE (SlotDate, SlotTime),
     FOREIGN KEY (BookingId) REFERENCES Bookings(BookingId) ON DELETE CASCADE
 );
+
+// Put this importantly
+
+ALTER TABLE public.bookings
+ADD CONSTRAINT unique_booking_slot
+UNIQUE (bookingdate, slottimefrom, slottimeto);
