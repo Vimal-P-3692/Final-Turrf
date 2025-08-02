@@ -12,6 +12,9 @@ declare global {
 }
 
 function Login() {
+  const baseUrlValidate = "http://localhost:5127";
+  const baseUrlOtp = "http://localhost:5126";
+
   const [formData, setFormData] = useState({
     username: "",
     otp: Array(6).fill("").join(""),
@@ -32,12 +35,10 @@ function Login() {
 
   const sendSMS = async () => {
     try {
-      console.log("Sending SMS to:", phoneNumber);
-      const response = await fetch("http://localhost:5126/generate", {
+      const response = await fetch(`${baseUrlOtp}/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': 'Bearer YOUR_API_KEY', // add if needed
         },
         body: JSON.stringify({
           phone: "8778879866",
@@ -45,14 +46,11 @@ function Login() {
       });
 
       if (!response.ok) {
-        console.log(
-          `Failed to send SMS: ${response.status} ${response.statusText}`
-        );
         throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log("API response:", data);
+      // console.log("API response:", data);
       return data;
     } catch (error) {
       console.error("Failed to send SMS:", error);
@@ -61,40 +59,37 @@ function Login() {
 
   const verifyOtp = async () => {
     try {
-      const phonenumber = phoneNumber; // make sure formData.phone is defined
-      const otp = formData.otp; // make sure formData.otp is defined
+      const phonenumber = phoneNumber;
+      const otp = formData.otp;
 
-      console.log("Sending verify request:", { phonenumber, otp });
-
-      const response = await fetch("http://localhost:5126/verify", {
+      const response = await fetch(`${baseUrlOtp}/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: phonenumber, // ✅ make sure your backend expects `phone` (not `phoneNumber`)
+          phone: phonenumber,
           otp: otp,
         }),
       });
 
       if (!response.ok) {
-        const text = await response.text(); // helpful for debugging bad responses
+        const text = await response.text();
         console.error(`Backend says:`, text);
         throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
-      console.log("OTP verification response:", data);
-      console.log();
+      // const data = await response.json();
+      // console.log("OTP verification response:", data);
+      // console.log();
 
-      // ✅ adjust this check to match your backend’s real response
       if (response.ok) {
       } else {
-        console.error("OTP verification failed:", data.message);
+        // console.error("OTP verification failed:", data.message);
       }
       return true;
     } catch (error) {
-      console.error("Failed to verify OTP:", error);
+      // console.error("Failed to verify OTP:", error);
       return false;
     }
   };
@@ -138,7 +133,6 @@ function Login() {
       if (window.recaptchaVerifier) {
         try {
           window.recaptchaVerifier.clear();
-          // delete window.recaptchaVerifier?;
         } catch {}
       }
     };
@@ -188,12 +182,6 @@ function Login() {
       return;
     }
 
-    // const fullPhone = `+91${phoneNumber}`;
-
-    // try {
-    //   await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
-    // } catch {}
-
     setCurrentStep("phone-verify");
     setOtpTimer(300);
     setTimerActive(true);
@@ -219,19 +207,20 @@ function Login() {
       return;
     }
     const result = await verifyOtp();
-    console.log("OTP verification result:", result);
 
-    setTimerActive(false);
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        phone: formData.phoneNumber,
-        isAuthenticated: true,
-      })
-    );
-    window.dispatchEvent(new CustomEvent("userLogin"));
-    navigate("/");
-    setLoading(false);
+    if (result) {
+      setTimerActive(false);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          phone: formData.phoneNumber,
+          isAuthenticated: true,
+        })
+      );
+      window.dispatchEvent(new CustomEvent("userLogin"));
+      navigate("/");
+      setLoading(false);
+    }
   };
 
   const handleResendOTP = async () => {
@@ -260,7 +249,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "http://localhost:5127/api/AdminLogin/validate",
+        `${baseUrlValidate}/api/AdminLogin/validate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -273,10 +262,8 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        // setPhoneNumber(data.phoneNumber); // ✅ store the phone number
-        console.log("Phone number retrieved:", data.phoneNumber);
         await setPhoneNumber(data.phoneNumber);
-        sendSMS(); // Call sendSMS to send OTP
+        sendSMS();
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Invalid credentials");
