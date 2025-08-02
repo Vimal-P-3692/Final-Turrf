@@ -154,9 +154,11 @@ const Management = () => {
 
       console.log("✅ Cancellation success:", data.message);
       alert("Booking cancelled successfully.");
+      window.location.reload(); // Reload to reflect changes
     } catch (err) {
       console.error("❌ API Error:", err);
       alert("Failed to cancel booking. Please try again.");
+      window.location.reload(); // Reload to reflect changes
     }
   }
 

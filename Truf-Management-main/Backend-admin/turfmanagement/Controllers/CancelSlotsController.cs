@@ -76,8 +76,8 @@ namespace turfmanagement.Controllers
                             using var reader = cmd.ExecuteReader();
                             if (reader.Read())
                             {
-                                userId = reader.GetInt32(0);
-                                bookingId = reader.GetInt32(1);
+                                bookingId = reader.GetInt32(0);
+                                userId = reader.GetInt32(1);
                             }
                             else
                             {
@@ -144,6 +144,14 @@ namespace turfmanagement.Controllers
                         {
                             cmdDelete.Parameters.AddWithValue("@bookingId", bookingId);
                             cmdDelete.ExecuteNonQuery();
+                        }
+
+                        string deleteBookingInfo = "DELETE FROM bookings WHERE bookingid = @bookingId;";
+
+                        using (var cmdDeleteInfo = new NpgsqlCommand(deleteBookingInfo, conn, tran))
+                        {
+                            cmdDeleteInfo.Parameters.AddWithValue("@bookingId", bookingId);
+                            cmdDeleteInfo.ExecuteNonQuery();
                         }
                     }
                 }
