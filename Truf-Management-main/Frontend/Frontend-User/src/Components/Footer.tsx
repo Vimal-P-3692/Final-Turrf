@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
 
               {/* Facebook Page Link */}
               <a
-                href="https://www.facebook.com/Turrfzone"
+                href="https://www.facebook.com/Turrfzone7"
                 target="_blank"
                 rel="noreferrer"
                 title="Facebook"
