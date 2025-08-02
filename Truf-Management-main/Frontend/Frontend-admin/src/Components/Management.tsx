@@ -151,14 +151,10 @@ const Management = () => {
       if (!response.ok) {
         throw new Error(data.message || "Booking cancellation failed");
       }
-
-      console.log("✅ Cancellation success:", data.message);
-      alert("Booking cancelled successfully.");
-      window.location.reload(); // Reload to reflect changes
+      window.location.reload();
     } catch (err) {
-      console.error("❌ API Error:", err);
-      alert("Failed to cancel booking. Please try again.");
-      window.location.reload(); // Reload to reflect changes
+      alert("Failed to cancel the booking. Please try again later.");
+      window.location.reload();
     }
   }
 
@@ -173,9 +169,6 @@ const Management = () => {
     if (loading && pendingAction) {
       const timeout = setTimeout(async () => {
         try {
-          // 1️⃣ Cancel in Express backend (port 5126)
-
-          // 2️⃣ Cancel in .NET backend (port 5127)
           const res = await fetch(
             "http://localhost:5127/api/CancelSlots/cancel",
             {
@@ -292,23 +285,25 @@ const Management = () => {
 
   // Check if a slot's time is in the past (only applies to today)
   const isPastSlot = (slot: Slot): boolean => {
-    if (!clickedDate) return false;
+  if (!clickedDate) return false;
 
-    // Only apply to today
-    if (clickedDate.toDateString() !== today.toDateString()) return false;
+  // Only apply to today
+  if (clickedDate.toDateString() !== today.toDateString()) return false;
 
-    const [hourStr, period] = slot.startTime!.split(" ");
-    let hour = parseInt(hourStr);
+  const [hourStr, period] = slot.startTime!.split(" ");
+  let hour = parseInt(hourStr);
 
-    // Convert to 24-hour format
-    if (period === "PM" && hour !== 12) hour += 12;
-    if (period === "AM" && hour === 12) hour = 0;
+  // Convert to 24-hour format
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
 
-    const now = new Date();
-    const currentHour = now.getHours(); // 0–23
+  const now = new Date();
+  const slotTime = new Date(now);
+  slotTime.setHours(hour, 15, 0, 0); // Set to the slot start hour + 15 minutes
 
-    return hour < currentHour;
-  };
+  return now >= slotTime; // Disable if time is 15+ minutes past slot start
+};
+
 
   // Handle slot click - different behavior based on slot status
   const handleSlotClick = (idx: number) => {
