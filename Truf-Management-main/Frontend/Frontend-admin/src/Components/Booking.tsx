@@ -103,10 +103,12 @@ const Booking = () => {
 
   return (
     <div className="booking-wrapper">
+      <div>
       <button className="back-button" onClick={() => navigate(-1)}>
         <img src={back} alt="Back" />
         Booking
       </button>
+      </div>
 
       <div className="booking-content">
         <input
