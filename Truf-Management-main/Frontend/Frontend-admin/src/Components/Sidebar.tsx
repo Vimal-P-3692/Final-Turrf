@@ -18,7 +18,6 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   return (
     <>
-      {/* Sidebar Menu */}
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="header">
           <button
@@ -29,14 +28,14 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <img src={back} alt="Close" />
           </button>
         </div>
-
-        {/* Navigation Links */}
         <nav>
           <ul>
             <li>
               <NavLink
                 to="/"
-                className={({ isActive }: { isActive: boolean }) => (isActive ? "active" : "")}
+                className={({ isActive }: { isActive: boolean }) =>
+                  isActive ? "active" : ""
+                }
               >
                 <span className="nav-link-content">
                   <img
@@ -51,7 +50,9 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <li>
               <NavLink
                 to="/admin/booking"
-                className={({ isActive }: { isActive: boolean }) => (isActive ? "active" : "")}
+                className={({ isActive }: { isActive: boolean }) =>
+                  isActive ? "active" : ""
+                }
               >
                 <span className="nav-link-content">
                   <img src={BookingIcon} alt="Booking" className="nav-icon" />
@@ -62,7 +63,9 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <li>
               <NavLink
                 to="/admin/management"
-                className={({ isActive }: { isActive: boolean }) => (isActive ? "active" : "")}
+                className={({ isActive }: { isActive: boolean }) =>
+                  isActive ? "active" : ""
+                }
               >
                 <span className="nav-link-content">
                   <img
@@ -77,7 +80,9 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <li>
               <NavLink
                 to="/admin/userdetail"
-                className={({ isActive }: { isActive: boolean }) => (isActive ? "active" : "")}
+                className={({ isActive }: { isActive: boolean }) =>
+                  isActive ? "active" : ""
+                }
               >
                 <span className="nav-link-content">
                   <img
@@ -92,11 +97,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           </ul>
         </nav>
       </div>
-
-      {/* Overlay on Mobile */}
       {isOpen && <div className="overlay" onClick={() => setIsOpen(false)} />}
-
-      {/* Floating Button to Open Sidebar */}
       {!isOpen && (
         <div className="message-btn" onClick={() => setIsOpen(true)}>
           <img src={back} alt="Open Menu" />

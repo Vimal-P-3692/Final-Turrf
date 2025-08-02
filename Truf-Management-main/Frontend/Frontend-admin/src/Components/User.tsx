@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../styles/User.css";
+import { SingleUserDetails } from "../services/api";
 type Booking = {
   date: string;
   timeFrom: string;
@@ -23,7 +23,6 @@ const User = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const phoneNumber = location.state?.phone || location.state?.phoneNumber;
-  // console.log("Phone Number:", phoneNumber);
 
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,20 +35,10 @@ const User = () => {
       return;
     }
 
-    // let phoneNo = "9876543210";
-    // const hold = localStorage.getItem("user");
-    // if (hold) {
-    //   const parsedUser = JSON.parse(hold);
-    //   phoneNo = parsedUser.phone || phoneNo;
-    // }
-
-    // `http://localhost:5125/api/AdminSingleUserDetails/user-details/${phoneNo}`
-    axios
-      .get(
-        `http://localhost:5127/api/AdminSingleUserDetails/user-details/${phoneNumber}`
-      )
-      .then((res) => {
-        setUser(res.data);
+    setLoading(true);
+    SingleUserDetails(phoneNumber)
+      .then((data) => {
+        setUser(data);
         setLoading(false);
       })
       .catch(() => {
@@ -61,7 +50,6 @@ const User = () => {
   const formatDate = (dateStr: string): string => {
     if (!dateStr || dateStr === "N/A") return "N/A";
 
-    // Handle both DD/MM/YYYY and DD-MM-YYYY formats
     const dateParts = dateStr.split(/[-/]/);
     if (dateParts.length !== 3) return dateStr;
 
@@ -80,12 +68,10 @@ const User = () => {
     if (!timeFrom || !timeTo) return "Not Scheduled";
 
     const parseTime = (t: string) => {
-      // Handle "12 AM", "1 PM" format
       if (t.includes("AM") || t.includes("PM")) {
         return t;
       }
 
-      // Handle "12:00" format and convert to 12-hour format
       const formatted = t.includes(":") ? t : `${t.replace(/\s+/g, "")}:00`;
       const date = new Date(`1970-01-01T${formatted}`);
 
@@ -113,7 +99,6 @@ const User = () => {
       </h2>
 
       <div className="parent">
-        {/* div1 */}
         <div className="user-card div1">
           <div className="user-info-header">
             <div className="user-avatar">
@@ -136,8 +121,6 @@ const User = () => {
             </div>
           </div>
         </div>
-
-        {/* div2 */}
         <div className="user-card div2">
           <div className="card-header green-header">Total Booking Hours</div>
           <div className="booking-hours">
@@ -145,8 +128,6 @@ const User = () => {
             <strong>{user.totalHours}</strong>
           </div>
         </div>
-
-        {/* div3 - Upcoming Bookings */}
         <div className="user-card scrollable div3">
           <div className="card-header green-header">
             Upcoming Booking{" "}
@@ -179,8 +160,6 @@ const User = () => {
             )}
           </div>
         </div>
-
-        {/* div4 - Past Bookings */}
         <div className="user-card scrollable div4">
           <div className="card-header green-header">
             Past Bookings{" "}

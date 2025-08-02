@@ -5,8 +5,8 @@ import print from "../assets/print.svg";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import "../styles/UserDetail.css";
+import { MultiUser } from "../services/api";
 
-// Interface for each booking entry
 interface BookingEntry {
   no: number;
   name: string;
@@ -18,24 +18,17 @@ interface BookingEntry {
 
 const Booking = () => {
   const navigate = useNavigate();
-
-  // State to store all booking entries
   const [bookingData, setBookingData] = useState<BookingEntry[]>([]);
-
-  // State for search/filter input
   const [filterText, setFilterText] = useState("");
 
-  // Fetch data on component mount
   useEffect(() => {
-    fetch("http://localhost:5127/api/AdminUser/details")
-      .then((res) => res.json())
+    MultiUser()
       .then((data) => setBookingData(data))
       .catch(() => {
-        // Handle error
+        alert("Can't load the users. Please try again later.");
       });
   }, []);
 
-  // Export data as Excel file
   const handleExport = () => {
     const worksheetData = [
       [
@@ -70,7 +63,6 @@ const Booking = () => {
     saveAs(data, "Bookings.xlsx");
   };
 
-  // Filter bookings based on search input
   const filteredData = bookingData.filter((entry) => {
     const lower = filterText.toLowerCase();
     return (
@@ -83,15 +75,12 @@ const Booking = () => {
 
   return (
     <div className="booking-page">
-      {/* Back Button */}
       <button className="back" onClick={() => navigate(-1)}>
         <img src={back} alt="Go back" className="back-icon" />
         User
       </button>
 
-      {/* Header section with search bar and export button */}
       <div className="booking-content">
-        {/* Responsive Search Bar */}
         <input
           type="text"
           placeholder="Search by name, phone or booking..."
@@ -100,14 +89,12 @@ const Booking = () => {
           className="search-input"
         />
 
-        {/* Export Button */}
         <button className="expert-button" onClick={handleExport}>
           <img src={print} alt="Export" className="print-icon" />
           Export Table
         </button>
       </div>
 
-      {/* Booking Table */}
       <div className="table-container p-4">
         <table className="w-full border border-collapse">
           <thead>

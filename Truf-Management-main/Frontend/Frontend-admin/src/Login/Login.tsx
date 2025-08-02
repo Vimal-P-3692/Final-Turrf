@@ -5,7 +5,6 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Logo from "../assets/logo.png";
 import "./Login.css";
 
-// Extend Window interface to include recaptchaVerifier
 declare global {
   interface Window {
     recaptchaVerifier: RecaptchaVerifier;
