@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "./Login/Login";
@@ -11,11 +11,7 @@ import User from "./Components/User";
 import LoadingPage from "./Components/LoadingPage";
 
 function App() {
-
-
-  const [loading, setLoading] = useState(true); // ✅ Loading state
-
-  // ✅ Show loading screen for 2 seconds (simulate load)
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => {
@@ -29,26 +25,22 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
-
-        {/* ADMIN LAYOUT */}
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Login />} />
+        <Route path="/dashboard" element={<Layout />}>
           <Route
             index
             element={
               <>
-              
                 <Dashboard />
               </>
             }
           />
-          <Route path="/admin/booking" element={<Booking />} />
-          <Route path="/admin/userdetail" element={<UserDetail />} />
-          
-          <Route path="/admin/management" element={<Management />} />
-          <Route path="/admin/userdetail/user" element={<User />} />
-          
         </Route>
+        <Route path="/admin/booking" element={<Booking />} />
+        <Route path="/admin/userdetail" element={<UserDetail />} />
+
+        <Route path="/admin/management" element={<Management />} />
+        <Route path="/admin/userdetail/user" element={<User />} />
       </Routes>
     </Router>
   );

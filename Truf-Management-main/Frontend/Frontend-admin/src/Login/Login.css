@@ -2,9 +2,6 @@
 
 html,
 body {
- 
-  width: 100%;
-  height: 100%;
   font-family: "Rajdhani", sans-serif;
   background-color: white;
   overflow-y: auto;
@@ -12,12 +9,10 @@ body {
   /* Prevents horizontal scroll due to overlap */
 }
 
-
 .overall {
   display: flex;
   min-height: 100vh;
-
-  }
+}
 
 /* Left Side */
 .left-log {
@@ -42,17 +37,14 @@ body {
   justify-content: center;
   min-height: 100vh;
   background-color: white;
-
 }
 
 .form {
   margin-right: 100px;
-
 }
 
 .login-form {
-  
-  padding: 20px 30px ;
+  padding: 20px 30px;
   width: 500px;
   background-color: #2e2e2e;
   margin-bottom: 10px;
@@ -196,7 +188,6 @@ body {
 
 /* General Button (for other buttons like those in username form) */
 .login-form button:not(.submit-btn):not(.back-button) {
-  
   font-family: "Rajdhani", sans-serif;
   border: none;
   background-color: #40ba36;
@@ -315,7 +306,7 @@ body {
   box-shadow: 0 2px 8px rgba(255, 165, 2, 0.3);
 }
 
-p{
+p {
   margin: 0px;
 }
 .resend-button:disabled {
@@ -372,8 +363,6 @@ p{
 
 /* Tablet Screens */
 @media (max-width: 900px) and (min-width: 550px) {
-  
-
   .submit-btn {
     max-width: 100%;
     width: 100%;
@@ -413,14 +402,15 @@ p{
   .login-form button:not(.submit-btn):not(.back-button):not(.resend-button) {
     max-width: 100%;
     width: 100%;
-    
+
     background-color: #2e2e2e;
     color: #ffffff;
     font-size: 18px;
     height: 50px;
   }
 
-  .login-form button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
+  .login-form
+    button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
     background-color: #1a1a1a;
   }
 
@@ -430,7 +420,6 @@ p{
     height: 42px;
     min-width: 100px;
   }
-  
 }
 
 /* Mobile Screens */
@@ -484,10 +473,10 @@ p{
     color: #ffffff;
     font-size: 16px;
     height: 48px;
-    
   }
 
-  .login-form button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
+  .login-form
+    button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
     background-color: #1a1a1a;
   }
 
@@ -560,7 +549,6 @@ p{
 /* ===== RESPONSIVE MESSAGE STYLES ===== */
 
 @media (max-width: 900px) {
-
   .error-message,
   .info-message {
     font-size: 13px;
@@ -577,7 +565,6 @@ p{
 }
 
 @media (max-width: 480px) {
-
   .error-message,
   .info-message {
     font-size: 12px;
@@ -663,7 +650,6 @@ p{
     background-color: white;
     color: black;
     box-shadow: none;
-
   }
 
   .login-form h2,
@@ -688,14 +674,11 @@ p{
 
   .right-log {
     width: 100%;
-    height: 100vh;
     justify-content: center;
     align-items: center;
   }
 
   .form {
-
-
     width: 100%;
     display: flex;
     justify-content: center;
@@ -799,7 +782,7 @@ input {
   padding: 0;
 }
 
-.recaptcha-container>div {
+.recaptcha-container > div {
   transform-origin: 0 0;
 }
 
@@ -940,9 +923,7 @@ input {
   outline: none;
 }
 
-
 @keyframes pulse-warning {
-
   0%,
   100% {
     opacity: 1;
@@ -954,7 +935,6 @@ input {
 }
 
 @keyframes pulse-critical {
-
   0%,
   100% {
     opacity: 1;

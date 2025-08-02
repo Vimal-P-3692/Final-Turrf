@@ -2,7 +2,8 @@
 
 CREATE TABLE Admin (
     username VARCHAR(50) PRIMARY KEY,
-    password VARCHAR(50) NOT NULL
+    password VARCHAR(50) NOT NULL,
+    phone_number INT
 );
 
 // Create an username and password for the admin

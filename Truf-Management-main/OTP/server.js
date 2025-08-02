@@ -16,7 +16,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.static("public")); // Serve static files from public directory
+app.use(express.static("public"));
 
 const otpStore = new Map(); // key = phone, value = { otp, timeout }
 const bookingStore = new Map(); // key = bookingId, value = { phone, userName, dateTime, reminderSent }

@@ -149,7 +149,7 @@ function Login() {
         })
       );
       window.dispatchEvent(new CustomEvent("userLogin"));
-      navigate("/");
+      navigate("/dashboard");
       setLoading(false);
     }
   };
