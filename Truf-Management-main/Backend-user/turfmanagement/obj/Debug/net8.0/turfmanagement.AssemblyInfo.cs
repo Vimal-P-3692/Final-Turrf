@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("turfmanagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4601a9dcfc7c82426060edecd4c28d90a45d302f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3896c67f8ee9c9c4567ed64d412ef81cfb3d38c")]
 [assembly: System.Reflection.AssemblyProductAttribute("turfmanagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("turfmanagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

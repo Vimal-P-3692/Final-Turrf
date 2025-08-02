@@ -11,6 +11,11 @@ import {
 } from "recharts";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../styles/Dashboard.css";
+import {
+  DashboardSummary,
+  DashbordGraphMonth,
+  DashbordGraphYear,
+} from "../services/api";
 
 type BookingItem = {
   month: string;
@@ -27,7 +32,6 @@ function Dashboard() {
   const [filter, setFilter] = useState<"Month" | "Year">("Year");
   const [currentDate, setCurrentDate] = useState(dayjs());
 
-  // ✅ Total values from API
   const [totalBookings, setTotalBookings] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
 
@@ -43,17 +47,16 @@ function Dashboard() {
 
         if (filter === "Year") {
           const year = currentDate.year();
-          url = `http://localhost:5127/api/AdminDashboard/year?year=${year}`;
+          url = DashbordGraphYear({ year });
         } else {
           const month = currentDate.month() + 1;
           const year = currentDate.year();
-          url = `http://localhost:5127/api/AdminDashboard/month?month=${month}&year=${year}`;
+          url = DashbordGraphMonth({ month, year });
         }
 
         const response = await fetch(url);
         const data = await response.json();
 
-        // ✅ Set total from API
         setTotalBookings(data.totalBookings || 0);
         setTotalHours(data.totalHours || 0);
 
@@ -76,11 +79,7 @@ function Dashboard() {
 
     const fetchSummaryData = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:5127/api/AdminDashboard/summary"
-        );
-        const data = await res.json();
-
+        const data = await DashboardSummary();
         setToday({ bookings: data.today, hours: data.todayHours });
         setUpcoming({ bookings: data.upcoming, hours: data.upcomingHours });
         setPast({ bookings: data.past, hours: data.pastHours });
@@ -88,14 +87,14 @@ function Dashboard() {
     };
 
     fetchGraphData();
-    fetchSummaryData(); // You can remove this if summary cards are not required
+    fetchSummaryData();
   }, [filter, currentDate]);
 
   return (
     <div className="dashboard-wrapper">
       <button className="back">Dashboard</button>
 
-      <div className="filter-bar">
+      <div >
         <div className="navigator">
           <ChevronLeft
             className="nav-icon"
@@ -135,7 +134,12 @@ function Dashboard() {
             }}
           />
         </div>
-
+      </div>
+      <div className="filter-bar">
+        <div className="total-info">
+          <strong>{totalHours} Hr</strong>
+          <strong>{totalBookings} Bookings</strong>
+        </div>
         <div className="dropdown-container">
           <label>Filter By</label>
           <select
@@ -147,14 +151,8 @@ function Dashboard() {
             <option value="Year">Year</option>
           </select>
         </div>
+        
       </div>
-
-      {/* ✅ Filter-based total summary */}
-      <div className="total-info">
-        <strong>{totalHours} Hr</strong>
-        <strong>{totalBookings} Bookings</strong>
-      </div>
-
       <div className="dashboard-container">
         <div className="graph-content">
           <div style={{ width: "100%", height: "100%" }}>

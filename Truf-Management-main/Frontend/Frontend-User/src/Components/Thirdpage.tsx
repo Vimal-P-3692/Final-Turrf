@@ -736,7 +736,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
                             }}
                           >
                             {slot.status === "maintenance"
-                              ? "Under Maintenance"
+                              ? slot.time
                               : slot.time.replace(" (Next Day)", "")}
                           </div>
                         );

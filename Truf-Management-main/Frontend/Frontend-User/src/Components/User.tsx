@@ -107,7 +107,14 @@ const User = () => {
 
   return (
     <div className="user-container">
-      <h2 className="user-header" onClick={() => navigate(-1)}>
+    <h2
+  className="user-header"
+  onClick={() => {
+    navigate(-1);
+    window.location.reload(); // 👈 forces page reload
+  }}
+>
+
         &larr; User Details
       </h2>
 

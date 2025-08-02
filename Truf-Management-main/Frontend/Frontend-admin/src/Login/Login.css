@@ -2,29 +2,27 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
+ 
   width: 100%;
   height: 100%;
   font-family: "Rajdhani", sans-serif;
   background-color: white;
-  overflow-x: hidden; /* Prevents horizontal scroll due to overlap */
+  overflow-y: auto;
+
+  /* Prevents horizontal scroll due to overlap */
 }
 
-* {
-  box-sizing: border-box;
-}
 
 .overall {
   display: flex;
+  min-height: 100vh;
 
-  padding: 0;
-}
+  }
 
 /* Left Side */
 .left-log {
   width: 60%;
-  height: 100vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,19 +40,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
   background-color: white;
+
 }
 
 .form {
   margin-right: 100px;
-  padding: 0;
+
 }
 
 .login-form {
-  height: 800px;
+  
+  padding: 20px 30px ;
   width: 500px;
   background-color: #2e2e2e;
-  padding: 40px 30px;
+  margin-bottom: 10px;
   border-radius: 12px;
   font-family: "Titillium Web", sans-serif;
   display: flex;
@@ -72,7 +73,7 @@ body {
   flex-direction: column;
   gap: 20px;
   align-items: stretch;
-  margin-left: 20px;
+
   justify-content: center;
 }
 
@@ -93,6 +94,8 @@ body {
   border-radius: 10px;
   border: none;
   height: 50px;
+
+  width: 100%;
   background-color: #666;
   color: white;
   font-size: 14px;
@@ -193,7 +196,7 @@ body {
 
 /* General Button (for other buttons like those in username form) */
 .login-form button:not(.submit-btn):not(.back-button) {
-  padding: 12px 24px;
+  
   font-family: "Rajdhani", sans-serif;
   border: none;
   background-color: #40ba36;
@@ -365,7 +368,9 @@ body {
 }
 
 /* Tablet Screens */
-@media (max-width: 900px) and (min-width: 481px) {
+@media (max-width: 900px) and (min-width: 550px) {
+  
+
   .submit-btn {
     max-width: 100%;
     width: 100%;
@@ -405,14 +410,14 @@ body {
   .login-form button:not(.submit-btn):not(.back-button):not(.resend-button) {
     max-width: 100%;
     width: 100%;
+    
     background-color: #2e2e2e;
     color: #ffffff;
     font-size: 18px;
     height: 50px;
   }
 
-  .login-form
-    button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
+  .login-form button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
     background-color: #1a1a1a;
   }
 
@@ -422,6 +427,7 @@ body {
     height: 42px;
     min-width: 100px;
   }
+  
 }
 
 /* Mobile Screens */
@@ -475,11 +481,10 @@ body {
     color: #ffffff;
     font-size: 16px;
     height: 48px;
-    padding: 12px 20px;
+    
   }
 
-  .login-form
-    button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
+  .login-form button:not(.submit-btn):not(.back-button):not(.resend-button):hover {
     background-color: #1a1a1a;
   }
 
@@ -552,6 +557,7 @@ body {
 /* ===== RESPONSIVE MESSAGE STYLES ===== */
 
 @media (max-width: 900px) {
+
   .error-message,
   .info-message {
     font-size: 13px;
@@ -568,6 +574,7 @@ body {
 }
 
 @media (max-width: 480px) {
+
   .error-message,
   .info-message {
     font-size: 12px;
@@ -624,7 +631,7 @@ body {
   .right-log {
     width: 100%;
     height: auto;
-    padding: 20px 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -639,7 +646,7 @@ body {
 
   .form {
     margin-right: 0;
-    padding: 0 20px;
+
     width: 100%;
     display: flex;
     justify-content: center;
@@ -653,7 +660,7 @@ body {
     background-color: white;
     color: black;
     box-shadow: none;
-    padding: 30px 20px;
+
   }
 
   .login-form h2,
@@ -684,8 +691,8 @@ body {
   }
 
   .form {
-    margin: 0;
-    padding: 0 10px;
+
+
     width: 100%;
     display: flex;
     justify-content: center;
@@ -695,7 +702,7 @@ body {
     width: 100%;
     max-width: 100%;
     height: auto;
-    padding: 20px;
+
     border: none;
     border-radius: 0;
     background-color: white;
@@ -719,12 +726,14 @@ body {
 
   /* Button styles handled in main button section above */
 }
+
 .checkbox-container {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
   gap: 0.5rem;
 }
+
 .avatar {
   width: 80px;
   height: 80px;
@@ -741,12 +750,14 @@ body {
   text-transform: uppercase;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
 .username-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
 }
+
 input {
   padding: 10px;
 }
@@ -755,7 +766,7 @@ input {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
   border-radius: 8px;
-  padding: 15px;
+
   margin-bottom: 20px;
   text-align: center;
 }
@@ -775,7 +786,8 @@ input {
   justify-content: center;
   margin: 20px 0;
   padding: 10px 0;
-  min-height: 80px; /* Reserve space for reCAPTCHA */
+  min-height: 80px;
+  /* Reserve space for reCAPTCHA */
 }
 
 .recaptcha-container:empty {
@@ -784,7 +796,7 @@ input {
   padding: 0;
 }
 
-.recaptcha-container > div {
+.recaptcha-container>div {
   transform-origin: 0 0;
 }
 
@@ -905,20 +917,24 @@ input {
 }
 
 @keyframes pulse-warning {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
 }
 
 @keyframes pulse-critical {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
