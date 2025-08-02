@@ -20,7 +20,7 @@ function Login() {
   const [formData, setFormData] = useState({
     phone: "",
     username: "",
-    otp: "",
+    otp: Array(6).fill("").join(""),
   });
 
   const [verified, setIsVerified] = useState(false);
@@ -571,17 +571,56 @@ function Login() {
               </div>
               <div className="lables">
                 <label htmlFor="otp">Verification Code:</label>
-                <input
-                  type="text"
-                  id="`otp`"
-                  name="otp"
-                  value={formData.otp}
-                  onChange={handleChange}
-                  placeholder="Enter 6-digit code"
-                  maxLength={6}
-                  required
-                  disabled={otpTimer === 0}
-                />
+                <div className="otp-input-container">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <input
+                      key={i}
+                      id={`otp-${i}`}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      className="otp-box"
+                      disabled={otpTimer === 0}
+                      value={formData.otp[i] || ""}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/, ""); // Digits only
+                        const otpArray = formData.otp.split("");
+
+                        otpArray[i] = val || ""; // If empty or cleared
+                        setFormData((prev) => ({
+                          ...prev,
+                          otp: otpArray.join(""),
+                        }));
+
+                        if (val && i < 5) {
+                          const next = document.getElementById(`otp-${i + 1}`);
+                          if (next) (next as HTMLInputElement).focus();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Backspace") {
+                          const otpArray = formData.otp.split("");
+
+                          // Clear current box
+                          otpArray[i] = "";
+                          setFormData((prev) => ({
+                            ...prev,
+                            otp: otpArray.join(""),
+                          }));
+
+                          // Move back
+                          if (i > 0) {
+                            const prevInput = document.getElementById(
+                              `otp-${i - 1}`
+                            );
+                            if (prevInput)
+                              (prevInput as HTMLInputElement).focus();
+                          }
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
 
               {error && <p className="error-message">{error}</p>}
