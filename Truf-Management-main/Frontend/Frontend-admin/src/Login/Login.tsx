@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { signInWithPhoneNumber } from "firebase/auth";
 import Logo from "../assets/logo.png";
 import "./Login.css";
-
-declare global {
-  interface Window {
-    recaptchaVerifier: RecaptchaVerifier;
-  }
-}
 
 function Login() {
   const baseUrlValidate = "http://localhost:5127";
@@ -27,7 +21,6 @@ function Login() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const [otpTimer, setOtpTimer] = useState(300);
   const [timerActive, setTimerActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -50,7 +43,6 @@ function Login() {
       }
 
       const data = await response.json();
-      // console.log("API response:", data);
       return data;
     } catch (error) {
       console.error("Failed to send SMS:", error);
@@ -59,17 +51,14 @@ function Login() {
 
   const verifyOtp = async () => {
     try {
-      const phonenumber = phoneNumber;
-      const otp = formData.otp;
-
       const response = await fetch(`${baseUrlOtp}/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: phonenumber,
-          otp: otp,
+          phone: phoneNumber,
+          otp: formData.otp,
         }),
       });
 
@@ -79,64 +68,11 @@ function Login() {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
-      // const data = await response.json();
-      // console.log("OTP verification response:", data);
-      // console.log();
-
-      if (response.ok) {
-      } else {
-        // console.error("OTP verification failed:", data.message);
-      }
       return true;
     } catch (error) {
-      // console.error("Failed to verify OTP:", error);
       return false;
     }
   };
-
-  useEffect(() => {
-    const initializeRecaptcha = () => {
-      try {
-        if (
-          !window.recaptchaVerifier &&
-          document.getElementById("recaptcha-container")
-        ) {
-          window.recaptchaVerifier = new RecaptchaVerifier(
-            auth,
-            "recaptcha-container",
-            {
-              size: "normal",
-              callback: () => {
-                setRecaptchaVerified(true);
-                setError("");
-              },
-              "expired-callback": () => {
-                setRecaptchaVerified(false);
-                setError("reCAPTCHA expired. Please verify again.");
-              },
-            }
-          );
-
-          window.recaptchaVerifier.render().catch(() => {
-            setError("Failed to load reCAPTCHA. Please refresh the page.");
-          });
-        }
-      } catch (error) {
-        setError("Failed to initialize reCAPTCHA. Please refresh the page.");
-      }
-    };
-
-    const timeout = setTimeout(initializeRecaptcha, 1000);
-
-    return () => {
-      clearTimeout(timeout);
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch {}
-      }
-    };
-  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -176,12 +112,6 @@ function Login() {
     setLoading(true);
     setError("");
 
-    if (!recaptchaVerified) {
-      setError("Please complete the reCAPTCHA verification.");
-      setLoading(false);
-      return;
-    }
-
     setCurrentStep("phone-verify");
     setOtpTimer(300);
     setTimerActive(true);
@@ -206,6 +136,7 @@ function Login() {
       setLoading(false);
       return;
     }
+
     const result = await verifyOtp();
 
     if (result) {
@@ -229,10 +160,9 @@ function Login() {
 
     try {
       const fullPhone = `+91${formData.phoneNumber}`;
-      await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
+      await signInWithPhoneNumber(auth, fullPhone, undefined as any); // reCAPTCHA removed
       setOtpTimer(300);
       setTimerActive(true);
-      setError("");
       setFormData((prev) => ({ ...prev, otp: "" }));
     } catch (err: any) {
       setError(err.message || "Failed to resend OTP. Please try again.");
@@ -307,16 +237,12 @@ function Login() {
                   required
                 />
               </div>
-              <div className="recaptcha-wrapper">
-                <div id="recaptcha-container"></div>
-              </div>
               {error && <p className="error-message">{error}</p>}
               <button
                 type="submit"
-                disabled={loading || !recaptchaVerified}
+                disabled={loading}
                 className="submit-btn"
                 onClick={handleValidatePassword}
-                style={{ opacity: recaptchaVerified ? 1 : 0.6 }}
               >
                 {loading ? "Sending OTP..." : "Send OTP"}
               </button>
@@ -362,10 +288,9 @@ function Login() {
                       disabled={otpTimer === 0}
                       value={formData.otp[i] || ""}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/\D/, ""); // Digits only
+                        const val = e.target.value.replace(/\D/, "");
                         const otpArray = formData.otp.split("");
-
-                        otpArray[i] = val || ""; // If empty or cleared
+                        otpArray[i] = val || "";
                         setFormData((prev) => ({
                           ...prev,
                           otp: otpArray.join(""),
@@ -379,15 +304,11 @@ function Login() {
                       onKeyDown={(e) => {
                         if (e.key === "Backspace") {
                           const otpArray = formData.otp.split("");
-
-                          // Clear current box
                           otpArray[i] = "";
                           setFormData((prev) => ({
                             ...prev,
                             otp: otpArray.join(""),
                           }));
-
-                          // Move back
                           if (i > 0) {
                             const prevInput = document.getElementById(
                               `otp-${i - 1}`
