@@ -167,7 +167,7 @@ export const DeleteMaintenence = async (date: string, timeSlots: string[]) => {
 // Showing Multi User
 export const MultiUser = async () => {
   try {
-    const res = await fetch(`${baseUrlAdmin}/details`);
+    const res = await fetch(`${baseUrlAdmin}/api/AdminUser/details`);
     if (!res.ok) throw new Error("Failed to load users");
     return await res.json();
   } catch (error) {

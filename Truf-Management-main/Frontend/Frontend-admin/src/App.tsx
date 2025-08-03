@@ -26,21 +26,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Layout />}>
-          <Route
-            index
-            element={
-              <>
-                <Dashboard />
-              </>
-            }
-          />
+        <Route path="/*" element={<Layout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="admin/booking" element={<Booking />} />
+          <Route path="admin/userdetail" element={<UserDetail />} />
+          <Route path="admin/management" element={<Management />} />
+          <Route path="admin/userdetail/user" element={<User />} />
         </Route>
-        <Route path="/admin/booking" element={<Booking />} />
-        <Route path="/admin/userdetail" element={<UserDetail />} />
-
-        <Route path="/admin/management" element={<Management />} />
-        <Route path="/admin/userdetail/user" element={<User />} />
       </Routes>
     </Router>
   );
