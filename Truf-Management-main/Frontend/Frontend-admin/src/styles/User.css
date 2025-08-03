@@ -9,10 +9,6 @@
 body {
   font-family: "Titillium Web", sans-serif;
   margin: 0;
-  /* Reset default body margin */
-  background-color: #f5f7fa;
-  margin-bottom: 100px;
-  /* Add a subtle background color for better contrast */
 }
 
 .user-container {
@@ -397,7 +393,6 @@ body {
 .scrollable .booking-scroll::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
 
 /*
   Responsive Design
