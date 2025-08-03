@@ -69,7 +69,6 @@ async function getIndiaTime() {
   );
   const data = await response.json();
   const currentDate = data.dateTime;
-  console.log(currentDate);
   return new Date(currentDate);
 }
 
@@ -132,7 +131,6 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       try {
         // Get current time info
         const now = await getIndiaTime();
-        console.log(now);
         const selectedDateString = selectedDate.toDateString();
         const todayString = now.toDateString();
         const isToday = selectedDateString === todayString;
@@ -356,14 +354,14 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Booking Success:", data);
+        // console.log("Booking Success:", data);
         alert("Booking Confirmed ✅");
       } else {
-        console.error("Booking Failed:", data.message);
+        // console.error("Booking Failed:", data.message);
         alert(`Booking Failed ❌: ${data.message}`);
       }
     } catch (error) {
-      console.error("Network Error:", error);
+      // console.error("Network Error:", error);
     }
   }
 
@@ -464,13 +462,9 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
             phone: sendMsgPhone,
             dateTime: sendMsgDateTime,
           });
-          console.log(re);
-        } catch (msgErr) {
-          console.warn(
-            "Booking successful, but failed to send confirmation message:",
-            msgErr
-          );
-        }
+          if (re != null) {
+          }
+        } catch (msgErr) {}
       }
     } catch (err: any) {
       setError(err.message || "Failed to book slot. Please try again.");
