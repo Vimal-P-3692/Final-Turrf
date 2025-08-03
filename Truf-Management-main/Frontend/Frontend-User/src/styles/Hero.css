@@ -1,5 +1,5 @@
 body {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: "Rajdhani", sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -7,7 +7,7 @@ body {
 .hero {
   width: 100%;
   min-height: 100vh;
-  background-image: url('../assets/heroImage.svg');
+  background-image: url("../assets/heroImage.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -66,28 +66,25 @@ body {
 }
 
 .green {
-  color: #00FF00;
+  color: #00ff00;
 }
 
 .cta-button-wrapper {
-
   display: flex;
   align-items: center;
   padding-top: 20px;
-
-
 }
 
 .cta-button {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: "Rajdhani", sans-serif;
   font-size: 40px;
   font-weight: 700;
   height: 70px;
   width: 100%;
 
   padding: 12px 24px;
-  color: white;
-  background-color: green;
+  color: #fff;
+  background-color: #008000;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -95,7 +92,8 @@ body {
 }
 
 .cta-button:hover {
-  background-color: #e0e0e0;
+  background-color: #fff;
+  color: #008000;
 }
 
 @media (max-width: 992px) {
@@ -161,12 +159,10 @@ body {
     width: 100%;
     min-height: 50vh;
 
-    background-image: url('../assets/hero3.svg');
-
+    background-image: url("../assets/hero3.svg");
 
     padding: 10px;
     text-align: center;
-
   }
 
   .hero-text h2 {
@@ -180,7 +176,6 @@ body {
   .cta-button {
     font-size: 18px;
     height: 45px;
-
   }
 
   .innercontent {

@@ -153,23 +153,6 @@ export const bookSlot = async (
     });
 
     if (response.ok) {
-      // Booking successful, now call the cleanup API
-      const cleanupResponse = await fetch(
-        // "https://api.turrfzone.com/api/Booking/cleanup-slots",
-        "http://localhost:5125/api/Booking/cleanup-slots",
-        {
-          method: "POST", // or "GET" based on your API
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (cleanupResponse.ok) {
-        // console.log("Cleanup successful");
-      } else {
-        // console.error("Cleanup failed");
-      }
     } else {
       alert("Booking has been failed. Please try again later.");
       window.location.reload();

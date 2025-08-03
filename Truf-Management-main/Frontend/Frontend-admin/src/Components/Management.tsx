@@ -428,12 +428,12 @@ const Management = () => {
                   <label htmlFor="reason">Reason for Cancellation:</label>
                   <select id="reason" className="form-input">
                     <option value="">Select a reason</option>
-                    <option value="No Show">No Show</option>
+                    <option value="No Show">Extreme weather conditions</option>
                     <option value="Facility Maintenance">
-                      Facility Maintenance
+                      Turf maintenance or emergency repair
                     </option>
                     <option value="User Request">User Request</option>
-                    <option value="Policy Violation">Policy Violation</option>
+                    <option value="Policy Violation">Special events</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
