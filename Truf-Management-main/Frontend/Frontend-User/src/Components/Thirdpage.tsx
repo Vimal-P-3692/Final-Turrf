@@ -64,6 +64,8 @@ const defaultSlots: Slot[] = [
 ];
 
 const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
+  const baseUrlMessahe = "http://localhost:5126";
+
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [slots, setSlots] = useState<Slot[]>(
@@ -328,7 +330,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       const isoDateTime =
         typeof dateTime === "string" ? dateTime : dateTime.toISOString();
 
-      const response = await fetch("https://otp.localhost/booking", {
+      const response = await fetch(`${baseUrlMessahe}/booking`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -351,7 +353,6 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
       }
     } catch (error) {
       console.error("Network Error:", error);
-     
     }
   }
 
@@ -476,29 +477,6 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
     price: sorted.length * 600,
   };
   const totalHours = sorted.length;
-
-  // console.log("Booking Info:", bookingInfo);
-  // console.log("Time is: " + bookingInfo.time);
-
-  // const sendMessageToUser = async () => {
-  //   console.log("Sending message to user:", bookingInfo);
-  //   const no = bookingInfo.phone;
-  //   const usernsme = bookingInfo.name;
-  //   const date = bookingInfo.date;
-  //   const response = await fetch(`http://localhost:5126/`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ phone: no, userName: usernsme, dateTime: date }),
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error("Failed to send message to user");
-  //   }
-
-  //   return await response.json();
-  // };
 
   return (
     <div className="main">

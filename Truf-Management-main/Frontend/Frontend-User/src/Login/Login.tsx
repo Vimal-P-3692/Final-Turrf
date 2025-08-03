@@ -15,6 +15,7 @@ declare global {
 
 // API base URL
 const API_BASE_URL = "http://localhost:5125/api";
+const baseUrlOtp = "http://localhost:5126";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -30,20 +31,17 @@ function Login() {
   >("initial");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
-  // const [recaptchaVerified, setRecaptchaVerified] = useState(true);
-  const [otpTimer, setOtpTimer] = useState(300); // 5 minutes in seconds
+  const [otpTimer, setOtpTimer] = useState(300);
   const [timerActive, setTimerActive] = useState(false);
   const navigate = useNavigate();
 
   const sendSMS = async () => {
     try {
       const phoneNumber = formData.phone;
-      const response = await fetch("http://localhost:5126/generate", {
+      const response = await fetch(`${baseUrlOtp}/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': 'Bearer YOUR_API_KEY', // add if needed
         },
         body: JSON.stringify({
           phone: phoneNumber,
@@ -72,7 +70,7 @@ function Login() {
 
       console.log("Sending verify request:", { phoneNumber, otp });
 
-      const response = await fetch("http://localhost:5126/verify", {
+      const response = await fetch(`${baseUrlOtp}/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
