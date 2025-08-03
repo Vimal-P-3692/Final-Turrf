@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/config";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { sendOtp } from "../services/api";
 import Logo from "../assets/logo.png";
 import "./Login.css";
 
 // Extend Window interface to include recaptchaVerifier
-declare global {
-  interface Window {
-    recaptchaVerifier: RecaptchaVerifier;
-  }
-}
 
 // API base URL
-const API_BASE_URL = "http://localhost:5125/api";
-const baseUrlOtp = "http://localhost:5126";
+const API_BASE_URL = "https://api.turrfzone.com/api";
+const baseUrlOtp = "https://otp.turrfzone.com";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -257,25 +250,6 @@ function Login() {
       //   return;
       // }
 
-      // Send OTP using Firebase
-      const phoneNumber = `+91${phone}`;
-      // console.log("Sending OTP to phone:", phoneNumber);
-
-      try {
-        await signInWithPhoneNumber(
-          auth,
-          phoneNumber,
-          window.recaptchaVerifier
-        );
-        // setConfirmationResult(confirmation);
-        // console.log("OTP sent successfully via Firebase");
-      } catch (firebaseError) {
-        // console.log(
-        //   "Firebase OTP failed, proceeding with dummy OTP:",
-        //   firebaseError
-        // );
-      }
-
       // Also send OTP using SampleOtpController for testing
       try {
         await sendOtp(phone); // Send just the 10-digit number to backend
@@ -287,7 +261,7 @@ function Login() {
         // Don't fail the whole process if SampleOtp fails
       }
 
-      // Move to OTP verification step (whether Firebase worked or not)
+      // Move to OTP verification step
       setCurrentStep("phone-verify");
 
       // Start the 5-minute countdown timer
@@ -459,21 +433,6 @@ function Login() {
     try {
       const phoneNumber = `+91${formData.phone}`;
       console.log("Resending OTP to phone:", phoneNumber);
-
-      try {
-        await signInWithPhoneNumber(
-          auth,
-          phoneNumber,
-          window.recaptchaVerifier
-        );
-        // setConfirmationResult(confirmation);
-        console.log("OTP resent successfully via Firebase");
-      } catch (firebaseError) {
-        console.log(
-          "Firebase OTP failed, proceeding with dummy OTP:",
-          firebaseError
-        );
-      }
 
       // Also resend OTP using SampleOtpController for testing
       try {

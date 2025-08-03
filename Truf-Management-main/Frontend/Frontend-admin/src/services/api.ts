@@ -1,7 +1,7 @@
 import { BookingItem } from "./datatypes";
 
-const baseUrlAdmin = "http://localhost:5127";
-const baseUrlMessage = "http://localhost:5126";
+const baseUrlAdmin = "https://admin-api.turrfzone.com";
+const baseUrlMessage = "https://otp.turrfzone.com";
 
 // Booking Status Api
 export const BookingStatusApi = async ({

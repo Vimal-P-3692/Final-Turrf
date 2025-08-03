@@ -73,7 +73,7 @@ async function getIndiaTime() {
 }
 
 const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
-  const baseUrlMessahe = "http://localhost:5126";
+  const baseUrlMessahe = "https://otp.turrfzone.com";
 
   const { currentUser } = useAuth();
   const navigate = useNavigate();

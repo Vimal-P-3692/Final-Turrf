@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/config";
-import { signInWithPhoneNumber } from "firebase/auth";
 import Logo from "../assets/logo.png";
 import "./Login.css";
 
 function Login() {
-  const baseUrlValidate = "http://localhost:5127";
-  const baseUrlOtp = "http://localhost:5126";
+  const baseUrlValidate = "https://admin-api.turrfzone.com";
+  const baseUrlOtp = "https://otp.turrfzone.com";
 
   const [formData, setFormData] = useState({
     username: "",
@@ -34,7 +32,7 @@ function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: "8778879866",
+          phone: "9361070035",
         }),
       });
 
@@ -159,8 +157,7 @@ function Login() {
     setError("");
 
     try {
-      const fullPhone = `+91${formData.phoneNumber}`;
-      await signInWithPhoneNumber(auth, fullPhone, undefined as any); // reCAPTCHA removed
+      await sendSMS();
       setOtpTimer(300);
       setTimerActive(true);
       setFormData((prev) => ({ ...prev, otp: "" }));

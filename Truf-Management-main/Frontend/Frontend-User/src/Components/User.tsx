@@ -29,12 +29,6 @@ const User = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!phoneNumber) {
-      setError("Phone number not provided.");
-      setLoading(false);
-      return;
-    }
-
     let phoneNo = "9876543210";
     const hold = localStorage.getItem("user");
     if (hold) {
@@ -42,10 +36,19 @@ const User = () => {
       phoneNo = parsedUser.phone || phoneNo;
     }
 
-    // `http://localhost:5125/api/AdminSingleUserDetails/user-details/${phoneNo}`
+    // Use phoneNumber from navigation state if available, otherwise use localStorage
+    const finalPhoneNumber = phoneNumber || phoneNo;
+
+    if (!finalPhoneNumber) {
+      setError("Phone number not provided.");
+      setLoading(false);
+      return;
+    }
+
+    // `http://localhost:5125/api/AdminSingleUserDetails/user-details/${finalPhoneNumber}`
     axios
       .get(
-        `http://localhost:5125/api/AdminSingleUserDetails/user-details/${phoneNo}`
+        `https://api.turrfzone.com/api/AdminSingleUserDetails/user-details/${phoneNo}`
       )
       .then((res) => {
         setUser(res.data);
@@ -107,14 +110,12 @@ const User = () => {
 
   return (
     <div className="user-container">
-    <h2
-  className="user-header"
-  onClick={() => {
-    navigate(-1);
-    window.location.reload(); // 👈 forces page reload
-  }}
->
-
+      <h2
+        className="user-header"
+        onClick={() => {
+          navigate("/");
+        }}
+      >
         &larr; User Details
       </h2>
 

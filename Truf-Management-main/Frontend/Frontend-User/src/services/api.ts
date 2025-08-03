@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5125/api"; // Remote backend server
+const API_BASE_URL = "https://api.turrfzone.com/api"; // Remote backend server
 
 // OTP-related interfaces
 export interface OtpSendRequest {
