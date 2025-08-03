@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Login from "./Login/Login";
 import Layout from "./layout";
@@ -9,6 +14,7 @@ import Management from "./Components/Management";
 import UserDetail from "./Components/UserDetail";
 import User from "./Components/User";
 import LoadingPage from "./Components/LoadingPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,14 +32,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route element={<Layout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="admin/booking" element={<Booking />} />
-          <Route path="admin/userdetail" element={<UserDetail />} />
-          <Route path="admin/management" element={<Management />} />
-          <Route path="admin/userdetail/user" element={<User />} />
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="admin/booking" element={<Booking />} />
+            <Route path="admin/userdetail" element={<UserDetail />} />
+            <Route path="admin/management" element={<Management />} />
+            <Route path="admin/userdetail/user" element={<User />} />
+          </Route>
         </Route>
+        {/* Catch all route - redirect unknown paths to login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

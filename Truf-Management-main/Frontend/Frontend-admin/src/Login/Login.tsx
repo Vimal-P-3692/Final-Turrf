@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 import Logo from "../assets/logo.png";
 import "./Login.css";
 
@@ -23,6 +24,13 @@ function Login() {
   const [timerActive, setTimerActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
+
+  // Check if user is already authenticated and redirect to dashboard
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
 
   const sendSMS = async () => {
     try {
@@ -142,12 +150,17 @@ function Login() {
       localStorage.setItem(
         "user",
         JSON.stringify({
+          username: formData.username,
           phone: formData.phoneNumber,
           isAuthenticated: true,
+          loginTime: new Date().toISOString(),
         })
       );
       window.dispatchEvent(new CustomEvent("userLogin"));
-      navigate("/dashboard");
+      navigate("/");
+      setLoading(false);
+    } else {
+      setError("Invalid OTP. Please try again.");
       setLoading(false);
     }
   };

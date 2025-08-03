@@ -10,22 +10,26 @@ import "../styles/Hedder.css";
 import Login from "../assets/loginicon.svg";
 import logo from "../assets/logo.png";
 
+// Importing auth utilities
+import { logout, getUser } from "../utils/auth";
+
 function Hedder() {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const location = useLocation();
-  const [username] = useState(() => {
-    return location.state?.username || "Admin";
+
+  const [username, setUsername] = useState(() => {
+    const user = getUser();
+    return user?.username || location.state?.username || "Admin";
   });
 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
-    
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    logout();
     setDropdownVisible(false);
     navigate("/login");
   };
@@ -37,12 +41,24 @@ function Hedder() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setDropdownVisible(false);
-        
       }
     };
 
+    // Update username when user data changes
+    const handleUserUpdate = () => {
+      const user = getUser();
+      setUsername(user?.username || "Admin");
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("userLogin", handleUserUpdate);
+    window.addEventListener("userLogout", handleUserUpdate);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("userLogin", handleUserUpdate);
+      window.removeEventListener("userLogout", handleUserUpdate);
+    };
   }, []);
 
   return (

@@ -32,7 +32,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <ul>
             <li>
               <NavLink
-                to="/dashboard"
+                to="/"
                 className={({ isActive }: { isActive: boolean }) =>
                   isActive ? "active" : ""
                 }
