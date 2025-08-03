@@ -8,6 +8,7 @@ import {
   formatDateForAPI,
   checkUser,
   registerUser,
+  getIndianTime,
 } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
@@ -62,15 +63,6 @@ const defaultSlots: Slot[] = [
   { time: "11 PM", status: "available" },
   { time: "12 AM (Next Day)", status: "available" },
 ];
-
-async function getIndiaTime() {
-  const response = await fetch(
-    "https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kolkata"
-  );
-  const data = await response.json();
-  const currentDate = data.dateTime;
-  return new Date(currentDate);
-}
 
 const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
   const baseUrlMessahe = "http://localhost:5126";
@@ -130,7 +122,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
 
       try {
         // Get current time info
-        const now = await getIndiaTime();
+        const now = await getIndianTime();
         const selectedDateString = selectedDate.toDateString();
         const todayString = now.toDateString();
         const isToday = selectedDateString === todayString;
@@ -209,7 +201,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
           setError("Failed to load slot data");
 
           // Fallback to default slots with proper time-based disabling
-          const now = await getIndiaTime();
+          const now = await getIndianTime();
           const isToday = selectedDate.toDateString() === now.toDateString();
 
           const fallbackSlots = defaultSlots.map((slot) => {
@@ -255,7 +247,7 @@ const Thirdpage: React.FC<Props> = ({ selectedDate }) => {
     }
 
     const updateTimeBasedStatus = async () => {
-      const now = await getIndiaTime();
+      const now = await getIndianTime();
 
       setSlots((prevSlots) =>
         prevSlots.map((slot) => {
