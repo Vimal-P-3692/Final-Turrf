@@ -94,7 +94,7 @@ function Dashboard() {
     <div className="dashboard-wrapper">
       <button className="back">Dashboard</button>
 
-      <div >
+      <div>
         <div className="navigator">
           <ChevronLeft
             className="nav-icon"
@@ -141,8 +141,10 @@ function Dashboard() {
           <strong>{totalBookings} Bookings</strong>
         </div>
         <div className="dropdown-container">
-          <label>Filter By</label>
+          <label htmlFor="filter">Filter By</label>
           <select
+            id="filter"
+            name="filter"
             value={filter}
             onChange={(e) => setFilter(e.target.value as "Month" | "Year")}
             className="filter-select"
@@ -151,7 +153,6 @@ function Dashboard() {
             <option value="Year">Year</option>
           </select>
         </div>
-        
       </div>
       <div className="dashboard-container">
         <div className="graph-content">
@@ -175,6 +176,7 @@ function Dashboard() {
                   strokeWidth={2}
                   dot={({ cx, cy, payload }) => (
                     <circle
+                      key={payload.month}
                       cx={cx}
                       cy={cy}
                       r={5}

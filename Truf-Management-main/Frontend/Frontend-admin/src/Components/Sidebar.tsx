@@ -36,6 +36,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }: { isActive: boolean }) =>
                   isActive ? "active" : ""
                 }
+                onClick={() => setIsOpen(false)}
               >
                 <span className="nav-link-content">
                   <img
@@ -53,6 +54,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }: { isActive: boolean }) =>
                   isActive ? "active" : ""
                 }
+                onClick={() => setIsOpen(false)}
               >
                 <span className="nav-link-content">
                   <img src={BookingIcon} alt="Booking" className="nav-icon" />
@@ -66,6 +68,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }: { isActive: boolean }) =>
                   isActive ? "active" : ""
                 }
+                onClick={() => setIsOpen(false)}
               >
                 <span className="nav-link-content">
                   <img
@@ -83,6 +86,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }: { isActive: boolean }) =>
                   isActive ? "active" : ""
                 }
+                onClick={() => setIsOpen(false)}
               >
                 <span className="nav-link-content">
                   <img

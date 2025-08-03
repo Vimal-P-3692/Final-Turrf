@@ -43,17 +43,6 @@ body {
   margin-right: 10px;
 }
 
-/* Header section: contains search bar and export button */
-.booking-content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 10px 0;
-}
-
-/* Export button */
 .expert-button {
   width: 180px;
   height: 40px;

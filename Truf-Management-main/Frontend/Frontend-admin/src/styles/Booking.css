@@ -1,17 +1,3 @@
-/* === Reset default styles and apply base font === */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
-
-/* Apply box-sizing globally */
-* {
-  box-sizing: border-box;
-}
-
-/* === Main wrapper for the booking page === */
 .booking-wrapper {
   height: 100vh;
   display: flex;
@@ -20,7 +6,6 @@ body {
   overflow: hidden;
 }
 
-/* === Back button styling === */
 .back-button {
   background: transparent;
   border: none;
@@ -42,7 +27,6 @@ body {
   height: 30px;
 }
 
-/* === Date navigation bar styling === */
 .date {
   font-weight: 700;
   font-size: 40px;
@@ -51,7 +35,6 @@ body {
   gap: 20px;
 }
 
-/* === Icons for previous/next navigation === */
 .back-icon,
 .next-icon {
   width: 30px;
@@ -59,12 +42,10 @@ body {
   cursor: pointer;
 }
 
-/* Flip the "next" icon horizontally */
 .next-icon {
   transform: rotate(180deg);
 }
 
-/* === Top bar containing date navigation and export button === */
 .booking-content {
   display: flex;
   flex-wrap: wrap;
@@ -74,7 +55,6 @@ body {
   margin-top: 10px;
 }
 
-/* === Export table button styling === */
 .expert-button {
   width: 180px;
   height: 40px;
@@ -94,14 +74,12 @@ body {
   height: 30px;
 }
 
-/* === Table container with vertical scroll === */
 .table-container {
   flex-grow: 1;
   overflow-y: auto;
   margin-top: 20px;
 }
 
-/* === Table styling === */
 table {
   width: 100%;
   border-collapse: separate;
@@ -109,44 +87,37 @@ table {
   min-width: 800px;
 }
 
-/* Table headers and cells */
 th,
 td {
   padding: 12px;
   text-align: center;
 }
 
-/* Header styles */
 th {
-  background-color: #006400; /* Dark green */
+  background-color: #006400;
   color: white;
   border: 3px solid white;
 }
 
-/* Cell background and borders */
 td {
   background-color: #d6d6d6;
   border-right: 3px solid black;
 }
 
-/* Remove right border for last cell */
 td:last-child {
   border-right: none;
 }
 
-/* Rounded table rows with subtle shadow */
 tr {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Make status text bold */
 td.status {
   font-weight: bold;
 }
 
-/* === Custom scrollbar for the table === */
 .table-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -156,7 +127,6 @@ td.status {
   border-radius: 4px;
 }
 
-/* === Responsive Styles: Tablet view (≤ 768px) === */
 @media (max-width: 768px) {
   .back-button {
     font-size: 28px;
@@ -177,8 +147,11 @@ td.status {
   }
 }
 
-/* === Responsive Styles: Mobile view (≤ 480px) === */
 @media (max-width: 480px) {
+  .booking-content {
+    justify-content: center;
+  }
+
   .back-button {
     font-size: 22px;
   }

@@ -62,7 +62,7 @@ const Booking = () => {
       }
     };
     fetchBookings();
-  }, [currentView]); 
+  }, [currentView]);
 
   const handlePrevView = () => {
     setViewIndex((prev) => (prev === 0 ? 0 : prev - 1));
@@ -104,14 +104,16 @@ const Booking = () => {
   return (
     <div className="booking-wrapper">
       <div>
-      <button className="back-button" onClick={() => navigate(-1)}>
-        <img src={back} alt="Back" />
-        Booking
-      </button>
+        <button className="back-button" onClick={() => navigate(-1)}>
+          <img src={back} alt="Back" />
+          Booking
+        </button>
       </div>
 
       <div className="booking-content">
         <input
+          name="search-box"
+          id="search-box"
           type="text"
           placeholder="Search by name, phone or booking..."
           value={filterText}

@@ -82,6 +82,8 @@ const Booking = () => {
 
       <div className="booking-content">
         <input
+          name="search-box"
+          id="search-box"
           type="text"
           placeholder="Search by name, phone or booking..."
           value={filterText}
