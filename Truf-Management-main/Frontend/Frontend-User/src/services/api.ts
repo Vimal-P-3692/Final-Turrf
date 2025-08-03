@@ -308,6 +308,14 @@ export const updateUserName = async (
   }
 };
 
+// Get the date and time for the slots
+export const getIndianTime = async () => {
+  const response = await fetch(`${API_BASE_URL}/current-datetime`);
+  const data = await response.json();
+  const currentDate = data.dateTime;
+  return new Date(currentDate);
+};
+
 // OTP Functions using SampleOtpController
 // Send OTP to phone number
 export const sendOtp = async (
