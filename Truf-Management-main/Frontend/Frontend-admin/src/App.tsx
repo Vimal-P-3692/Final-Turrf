@@ -12,6 +12,7 @@ import LoadingPage from "./Components/LoadingPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => {
@@ -26,7 +27,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/*" element={<Layout />}>
+        <Route element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="admin/booking" element={<Booking />} />
           <Route path="admin/userdetail" element={<UserDetail />} />
