@@ -12,34 +12,34 @@ and even cancel booked slots when needed.
   - Database: Postgres sql.
 
 # Installation:
-  git clone https://github.com/Vimal-P-3692/Final-Turrf.git
-  cd Final-Turrf
+  - git clone https://github.com/Vimal-P-3692/Final-Turrf.git
+  - cd Final-Turrf
 
   # Frontend 
-  cd Frontend
-  npm install  # to install common packages for both admin and the user.
+  - cd Frontend
+  - npm install  # to install common packages for both admin and the user.
 
   # Frontend for user.
-  cd Frontend-User
-  npm install  # to install the packages on the user side.
-  npm run dev  # to run the frontend-user.
+  - cd Frontend-User
+  - npm install  # to install the packages on the user side.
+  - npm run dev  # to run the frontend-user.
 
   # Frontend for admin.
-  cd ../Frontend-admin  # to install the packages on the admin side.
-  npm install  # to install the packages on the admin side.
-  npm run dev  # to run the frontend-admin.
+  - cd ../Frontend-admin  # to install the packages on the admin side.
+  - npm install  # to install the packages on the admin side.
+  - npm run dev  # to run the frontend-admin.
 
   # Backend for admin.
-  cd Backend-admin/turfmanagement
-  dotnet run  # to run the backend for the admin.
+  - cd Backend-admin/turfmanagement
+  - dotnet run  # to run the backend for the admin.
 
   # Backend for user.
-  cd ../../Backend-user/turfmanagement
-  dotnet run  # to run the backend for the user.
+  - cd ../../Backend-user/turfmanagement
+  - dotnet run  # to run the backend for the user.
 
   # Otp service
-  cd OTP
-  npm install  # to install the packages
-  node server.js  # to start the message service.
+   - cd OTP
+   - npm install  # to install the packages
+   - node server.js  # to start the message service.
   
   
