@@ -1,7 +1,9 @@
 {
-  "name": "TurfZone Admin",
+  "name": "TurfZone",
   "short_name": "TurfZone",
-  "start_url": "/",
+  "start_url": "/?homescreen=true",
+  "scope": "/",
+  "id": "/?homescreen=true",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
