@@ -1,17 +1,17 @@
-Project TItle:
+# Project TItle:
   Turrf-Zone Booking and Maintenance.
 
-Description:
+# Description:
   An online turf-slot booking system that lets users reserve their play time without needing to visit the turf physically. 
 Players can easily view their bookings, while admins can monitor monthly/yearly booking trends, mark slots as under maintenance (to prevent bookings),
 and even cancel booked slots when needed.
 
-Tech Stack:
+# Tech Stack:
   - Frontend: React + TypeScript
   - Backend: Node.js and .NET 8
   - Database: Postgres sql.
 
-Installation:
+# Installation:
   git clone https://github.com/Vimal-P-3692/Final-Turrf.git
   cd Final-Turrf
 
