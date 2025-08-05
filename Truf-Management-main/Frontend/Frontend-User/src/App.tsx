@@ -13,24 +13,31 @@ import { useRef, useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import User from "./Components/User";
 import Footer from "./Components/Footer";
-import { getIndianTime } from "./services/api";
-
-async function fetchTime() {
-  return new Date(await getIndianTime());
-}
-
-const currentDate = await fetchTime();
-
 
 function App() {
   const secondPageRef = useRef<HTMLDivElement>(null);
   const thirdPageRef = useRef<HTMLDivElement>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(currentDate));
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { currentUser, loading } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Set the correct Indian time when component mounts
+    const setInitialDate = async () => {
+      try {
+        const { getIndianTime } = await import("./services/api");
+        const indianTime = await getIndianTime();
+        setSelectedDate(new Date(indianTime));
+      } catch (error) {
+        console.error("Failed to get Indian time:", error);
+        // Fall back to local time if API fails
+        setSelectedDate(new Date());
+      }
+    };
+
+    setInitialDate();
   }, []);
 
   if (loading) {
@@ -67,7 +74,7 @@ function App() {
                 }}
               />
               <div ref={secondPageRef}>
-              <Secondpage onDateClick={(date) => setSelectedDate(date)} />
+                <Secondpage onDateClick={(date) => setSelectedDate(date)} />
               </div>
               <div ref={thirdPageRef}>
                 <Thirdpage selectedDate={selectedDate} />

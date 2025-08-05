@@ -8,7 +8,13 @@ const app = express();
 
 // CORS configuration to allow only localhost:5173
 const corsOptions = {
-  origin: "http://localhost:5174",
+  origin: [
+    "https://turrfzone.com",
+    "https://www.turrfzone.com",
+    "https://admin.turrfzone.com",
+    "https://www.admin.turrfzone.com",
+    "https://localhost",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -17,6 +23,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static("public"));
+
+// Middleware to log all incoming requests
+// app.use((req, res, next) => {
+//   console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+//   next();
+// });
 
 const otpStore = new Map(); // key = phone, value = { otp, timeout }
 const bookingStore = new Map(); // key = bookingId, value = { phone, userName, dateTime, reminderSent }
@@ -102,7 +114,7 @@ Gear up and see you on the turf!`;
 function sendBookingCancellation(
   reason,
   phoneNumber,
-  supportNumber = "6382031932"
+  supportNumber = "9715264666"
 ) {
   // Template message exactly as registered: Hi {#var#}, Your TurrfZone booking has been cancelled. If you have any questions, call us at {#var#}. We hope to see you back on the turf soon!
   // Replace {#var#} placeholders manually since the API expects the final message
