@@ -7,24 +7,8 @@ import image4 from "../assets/img.jpeg";
 import { getIndianTime } from "../services/api";
 
 const images = [image1, image2, image3, image4];
-const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const getStartOfWeek = (date: Date) => {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setDate(d.getDate() + diff);
-  return d;
-};
-
-const getWeekDates = (baseDate: Date): Date[] => {
-  const start = getStartOfWeek(baseDate);
-  return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(start);
-    d.setDate(start.getDate() + i);
-    return d;
-  });
-};
+const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MAX_DAYS_AHEAD = 60;
 
 type SecondpageProps = {
   onDateClick: (date: Date) => void;
@@ -35,14 +19,36 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [weekDates, setWeekDates] = useState<Date[]>([]);
+  const [rollingDates, setRollingDates] = useState<Date[]>([]);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [startIndex, setStartIndex] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 500) setVisibleCount(3);
+      else if (width <= 768) setVisibleCount(4);
+      else if (width <= 1024) setVisibleCount(5);
+      else setVisibleCount(6);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchTime = async () => {
       const now = new Date(await getIndianTime());
+      now.setHours(0, 0, 0, 0);
       setCurrentDateTime(now);
       setSelectedDate(now);
-      setWeekDates(getWeekDates(now));
+      const dates: Date[] = [];
+      for (let i = 0; i < MAX_DAYS_AHEAD; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + i);
+        dates.push(d);
+      }
+      setRollingDates(dates);
     };
     fetchTime();
   }, []);
@@ -62,54 +68,36 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
     if (touchStartX === null) return;
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX - touchEndX;
-
-    if (diff > 50) {
-      nextWeek();
-    } else if (diff < -50) {
-      prevWeek();
-    }
+    if (diff > 50) handleNext();
+    else if (diff < -50) handlePrev();
     setTouchStartX(null);
   };
 
-  const isPastDate = (date: Date) => {
-    const today = new Date(currentDateTime);
-    today.setHours(0, 0, 0, 0);
-    return date < today;
+  const handlePrev = () => {
+    setStartIndex((prev) => Math.max(prev - visibleCount, 0));
   };
 
-  const isCurrentWeek = () => {
-    const today = currentDateTime;
-    const startOfThisWeek = getStartOfWeek(today).toDateString();
-    const startOfSelectedWeek = getStartOfWeek(selectedDate).toDateString();
-    return startOfThisWeek === startOfSelectedWeek;
-  };
-
-  const isCurrentMonth = () => {
-    return (
-      selectedDate.getFullYear() === currentDateTime.getFullYear() &&
-      selectedDate.getMonth() === currentDateTime.getMonth()
+  const handleNext = () => {
+    const filteredDates = rollingDates.filter(
+      (date) =>
+        date.getFullYear() === selectedDate.getFullYear() &&
+        date.getMonth() === selectedDate.getMonth()
     );
+    const maxIndex = Math.max(0, filteredDates.length - visibleCount);
+    setStartIndex((prev) => Math.min(prev + visibleCount, maxIndex));
   };
 
-  const prevWeek = () => {
-    const newDate = new Date(selectedDate);
-    newDate.setDate(newDate.getDate() - 7);
-    const startOfNewWeek = getStartOfWeek(newDate);
-    const startOfThisWeek = getStartOfWeek(currentDateTime);
-    if (startOfNewWeek < startOfThisWeek) return; // Block going before current week
-    setSelectedDate(newDate);
-    setWeekDates(getWeekDates(newDate));
+  const handleDateClick = (date: Date) => {
+    if (date < currentDateTime) return;
+    setSelectedDate(date);
+    onDateClick(date);
   };
 
-  const nextWeek = () => {
-    const newDate = new Date(selectedDate);
-    newDate.setDate(newDate.getDate() + 7);
-    setSelectedDate(newDate);
-    setWeekDates(getWeekDates(newDate));
-  };
+  const formatDate = (date: Date) => date.getDate();
+  const isSelected = (date: Date) =>
+    selectedDate.toDateString() === date.toDateString();
 
   const prevMonth = () => {
-    if (isCurrentMonth()) return;
     const newDate = new Date(selectedDate);
     newDate.setMonth(newDate.getMonth() - 1);
     if (
@@ -120,23 +108,15 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
       return;
     }
     setSelectedDate(newDate);
-    setWeekDates(getWeekDates(newDate));
+    setStartIndex(0);
   };
 
   const nextMonth = () => {
     const newDate = new Date(selectedDate);
     newDate.setMonth(newDate.getMonth() + 1);
     setSelectedDate(newDate);
-    setWeekDates(getWeekDates(newDate));
+    setStartIndex(0);
   };
-
-  const handleDateClick = (date: Date) => {
-    if (isPastDate(date)) return;
-    setSelectedDate(date);
-    onDateClick(date);
-  };
-
-  const formatDate = (date: Date) => date.getDate();
 
   return (
     <div className="container">
@@ -152,7 +132,6 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
         >
           &#x276E;
         </button>
-
         <div className="slider-image-wrapper">
           <div
             className="slider-track"
@@ -164,12 +143,11 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
                 src={src}
                 alt={`Slide ${index + 1}`}
                 className="slider-image"
-                  loading="lazy"
+                loading="lazy"
               />
             ))}
           </div>
         </div>
-
         <button
           className="nav-btn nav-right"
           onClick={() => setCurrentSlide((prev) => (prev + 1) % images.length)}
@@ -183,7 +161,10 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
         <button
           className="left-calendar"
           onClick={prevMonth}
-          disabled={isCurrentMonth()}
+          disabled={
+            selectedDate.getFullYear() === currentDateTime.getFullYear() &&
+            selectedDate.getMonth() === currentDateTime.getMonth()
+          }
         >
           &#x276E;
         </button>
@@ -196,39 +177,53 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
         </button>
       </div>
 
-      {/* Week Navigation */}
+      {/* Rolling Date Navigation */}
       <div className="calendar-nav weekdays-inside-nav">
         <button
           className="left-calendar"
-          onClick={prevWeek}
-          disabled={isCurrentWeek()}
+          onClick={handlePrev}
+          disabled={startIndex <= 0}
         >
           &#x276E;
         </button>
-
         <div
           className="weekdays"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {weekDates.map((d, i) => {
-            const isSelected = selectedDate.toDateString() === d.toDateString();
-            return (
+          {rollingDates
+            .filter(
+              (date) =>
+                date.getFullYear() === selectedDate.getFullYear() &&
+                date.getMonth() === selectedDate.getMonth()
+            )
+            .slice(startIndex, startIndex + visibleCount)
+            .map((date, i) => (
               <div
                 key={i}
-                className={`day ${isSelected ? "selected" : ""} ${
-                  isPastDate(d) ? "disabled" : ""
-                }`}
-                onClick={() => handleDateClick(d)}
+                className={`day ${isSelected(date) ? "selected" : ""}`}
+                onClick={() => handleDateClick(date)}
               >
-                <span>{formatDate(d)}</span>
-                <span>{weekdays[d.getDay() === 0 ? 6 : d.getDay() - 1]}</span>
+                <span>{formatDate(date)}</span>
+                <span>{weekdays[date.getDay()]}</span>
               </div>
-            );
-          })}
+            ))}
         </div>
-
-        <button className="right-calendar" onClick={nextWeek}>
+        <button
+          className="right-calendar"
+          onClick={handleNext}
+          disabled={
+            startIndex >=
+            Math.max(
+              0,
+              rollingDates.filter(
+                (date) =>
+                  date.getFullYear() === selectedDate.getFullYear() &&
+                  date.getMonth() === selectedDate.getMonth()
+              ).length - visibleCount
+            )
+          }
+        >
           &#x276F;
         </button>
       </div>

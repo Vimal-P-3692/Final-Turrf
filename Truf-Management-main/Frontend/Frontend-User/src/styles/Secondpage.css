@@ -102,25 +102,31 @@ body {
   cursor: pointer;
   padding: 0 20px;
 }
+.weekdays-inside-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 10px;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
 .weekdays {
   display: flex;
   justify-content: center;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  gap: 12px;
-  padding-bottom: 10px;
-  scrollbar-width: thin; /* Firefox */
-  -ms-overflow-style: auto; /* IE 10+ */
+  gap: 10px;
+  overflow-x: hidden;
+  flex-wrap: nowrap;
+  max-width: 100%;
 }
-
 .weekdays::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 
 .weekdays::-webkit-scrollbar-thumb {
   background-color: #ccc;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .weekdays::-webkit-scrollbar-track {
@@ -182,14 +188,7 @@ body {
   color: #000;
 }
 
-.weekdays-inside-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0px;
-  flex-wrap: nowrap;
-  overflow-x: hidden;
-}
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
