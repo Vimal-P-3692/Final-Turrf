@@ -8,7 +8,7 @@ import { getIndianTime } from "../services/api";
 
 const images = [image1, image2, image3, image4];
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MAX_DAYS_AHEAD = 60;
+const MAX_DAYS_AHEAD = 1000;
 
 type SecondpageProps = {
   onDateClick: (date: Date) => void;
@@ -232,5 +232,6 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
     </div>
   );
 };
+
 
 export default Secondpage;
