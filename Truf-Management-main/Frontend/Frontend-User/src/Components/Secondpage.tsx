@@ -3,9 +3,10 @@ import "../styles/Secondpage.css";
 import image1 from "../assets/herosectionbgg.jpg";
 import image2 from "../assets/logo.png";
 import image3 from "../assets/heroImage.svg";
+import image4 from "../assets/img.jpeg";
 import { getIndianTime } from "../services/api";
 
-const images = [image1, image2, image3];
+const images = [image1, image2, image3, image4];
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const getStartOfWeek = (date: Date) => {
@@ -144,7 +145,9 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
         <button
           className="nav-btn nav-left"
           onClick={() =>
-            setCurrentSlide((prev) => (prev - 1 + images.length) % images.length)
+            setCurrentSlide(
+              (prev) => (prev - 1 + images.length) % images.length
+            )
           }
         >
           &#x276E;
@@ -161,6 +164,7 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
                 src={src}
                 alt={`Slide ${index + 1}`}
                 className="slider-image"
+                  loading="lazy"
               />
             ))}
           </div>
@@ -176,7 +180,11 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
 
       {/* Month Navigation */}
       <div className="calendar-nav">
-        <button className="left-calendar" onClick={prevMonth} disabled={isCurrentMonth()}>
+        <button
+          className="left-calendar"
+          onClick={prevMonth}
+          disabled={isCurrentMonth()}
+        >
           &#x276E;
         </button>
         <span>
@@ -190,7 +198,11 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
 
       {/* Week Navigation */}
       <div className="calendar-nav weekdays-inside-nav">
-        <button className="left-calendar" onClick={prevWeek} disabled={isCurrentWeek()}>
+        <button
+          className="left-calendar"
+          onClick={prevWeek}
+          disabled={isCurrentWeek()}
+        >
           &#x276E;
         </button>
 
