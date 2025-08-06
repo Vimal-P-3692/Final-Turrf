@@ -3,34 +3,48 @@ import "../styles/Secondpage.css";
 import image1 from "../assets/herosectionbgg.jpg";
 import image2 from "../assets/logo.png";
 import image3 from "../assets/heroImage.svg";
+import { getIndianTime } from "../services/api";
 
 const images = [image1, image2, image3];
+const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-// ✅ Correct prop type here
+const getStartOfWeek = (date: Date) => {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d;
+};
+
+const getWeekDates = (baseDate: Date): Date[] => {
+  const start = getStartOfWeek(baseDate);
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    return d;
+  });
+};
+
 type SecondpageProps = {
   onDateClick: (date: Date) => void;
 };
 
-const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
 const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [clickedDate, setClickedDate] = useState<Date>(today);
-  const [dateSlide, setDateSlide] = useState(0);
-  const [daysPerSlide, setDaysPerSlide] = useState(getDaysPerSlide());
-  const maxDays = 15;
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [weekDates, setWeekDates] = useState<Date[]>([]);
 
-  function getDaysPerSlide() {
-    const width = window.innerWidth;
-    if (width <= 360) return 3;
-    if (width <= 480) return 4;
-    return 5;
-  }
-
-  const totalSlides = Math.ceil(maxDays / (daysPerSlide || 1));
+  useEffect(() => {
+    const fetchTime = async () => {
+      const now = new Date(await getIndianTime());
+      setCurrentDateTime(now);
+      setSelectedDate(now);
+      setWeekDates(getWeekDates(now));
+    };
+    fetchTime();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,49 +53,100 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setDaysPerSlide(getDaysPerSlide());
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const allDates: Date[] = Array.from({ length: maxDays }, (_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    return date;
-  });
-
-  const visibleDates = allDates.slice(
-    dateSlide * daysPerSlide,
-    dateSlide * daysPerSlide + daysPerSlide
-  );
-
-  const nextImage = () => setCurrentSlide((prev) => (prev + 1) % images.length);
-  const prevImage = () =>
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-
-  const nextDateSlide = () => {
-    if (dateSlide < totalSlides - 1) setDateSlide((prev) => prev + 1);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
   };
 
-  const prevDateSlide = () => {
-    if (dateSlide > 0) setDateSlide((prev) => prev - 1);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+
+    if (diff > 50) {
+      nextWeek();
+    } else if (diff < -50) {
+      prevWeek();
+    }
+    setTouchStartX(null);
+  };
+
+  const isPastDate = (date: Date) => {
+    const today = new Date(currentDateTime);
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const isCurrentWeek = () => {
+    const today = currentDateTime;
+    const startOfThisWeek = getStartOfWeek(today).toDateString();
+    const startOfSelectedWeek = getStartOfWeek(selectedDate).toDateString();
+    return startOfThisWeek === startOfSelectedWeek;
+  };
+
+  const isCurrentMonth = () => {
+    return (
+      selectedDate.getFullYear() === currentDateTime.getFullYear() &&
+      selectedDate.getMonth() === currentDateTime.getMonth()
+    );
+  };
+
+  const prevWeek = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() - 7);
+    const startOfNewWeek = getStartOfWeek(newDate);
+    const startOfThisWeek = getStartOfWeek(currentDateTime);
+    if (startOfNewWeek < startOfThisWeek) return; // Block going before current week
+    setSelectedDate(newDate);
+    setWeekDates(getWeekDates(newDate));
+  };
+
+  const nextWeek = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() + 7);
+    setSelectedDate(newDate);
+    setWeekDates(getWeekDates(newDate));
+  };
+
+  const prevMonth = () => {
+    if (isCurrentMonth()) return;
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+    if (
+      newDate.getFullYear() < currentDateTime.getFullYear() ||
+      (newDate.getFullYear() === currentDateTime.getFullYear() &&
+        newDate.getMonth() < currentDateTime.getMonth())
+    ) {
+      return;
+    }
+    setSelectedDate(newDate);
+    setWeekDates(getWeekDates(newDate));
+  };
+
+  const nextMonth = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setSelectedDate(newDate);
+    setWeekDates(getWeekDates(newDate));
   };
 
   const handleDateClick = (date: Date) => {
-    setClickedDate(date);              // Update selection visually
-    onDateClick(date);                 // ✅ Send date to parent (e.g. App.tsx)
+    if (isPastDate(date)) return;
+    setSelectedDate(date);
+    onDateClick(date);
   };
 
-  const isToday = (date: Date) => date.toDateString() === today.toDateString();
+  const formatDate = (date: Date) => date.getDate();
 
   return (
     <div className="container">
       {/* Image Carousel */}
       <div className="slider">
-        <button className="nav-btn nav-left" onClick={prevImage}>
+        <button
+          className="nav-btn nav-left"
+          onClick={() =>
+            setCurrentSlide((prev) => (prev - 1 + images.length) % images.length)
+          }
+        >
           &#x276E;
         </button>
 
@@ -101,60 +166,57 @@ const Secondpage: React.FC<SecondpageProps> = ({ onDateClick }) => {
           </div>
         </div>
 
-        <button className="nav-btn nav-right" onClick={nextImage}>
+        <button
+          className="nav-btn nav-right"
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % images.length)}
+        >
           &#x276F;
         </button>
       </div>
 
-      {/* Month and Year Label */}
+      {/* Month Navigation */}
       <div className="calendar-nav">
+        <button className="left-calendar" onClick={prevMonth} disabled={isCurrentMonth()}>
+          &#x276E;
+        </button>
         <span>
-          {clickedDate.toLocaleString("default", { month: "long" })}{" "}
-          {clickedDate.getFullYear()}
+          {selectedDate.toLocaleString("default", { month: "long" })}{" "}
+          {selectedDate.getFullYear()}
         </span>
+        <button className="right-calendar" onClick={nextMonth}>
+          &#x276F;
+        </button>
       </div>
 
-      {/* Date Slider */}
+      {/* Week Navigation */}
       <div className="calendar-nav weekdays-inside-nav">
-        <button
-          className="left-calendar"
-          onClick={prevDateSlide}
-          disabled={dateSlide === 0}
-        >
+        <button className="left-calendar" onClick={prevWeek} disabled={isCurrentWeek()}>
           &#x276E;
         </button>
 
-        <div className="weekdays">
-          {visibleDates.map((date, index) => {
-            const isSelected =
-              clickedDate?.toDateString() === date.toDateString();
-
+        <div
+          className="weekdays"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {weekDates.map((d, i) => {
+            const isSelected = selectedDate.toDateString() === d.toDateString();
             return (
               <div
-                key={index}
+                key={i}
                 className={`day ${isSelected ? "selected" : ""} ${
-                  isToday(date) ? "today" : ""
+                  isPastDate(d) ? "disabled" : ""
                 }`}
-                onClick={() => handleDateClick(date)}
+                onClick={() => handleDateClick(d)}
               >
-                <span>{date.getDate()}</span>
-                <span>
-                  {
-                    weekdays[
-                      date.getDay() === 0 ? 6 : date.getDay() - 1
-                    ]
-                  }
-                </span>
+                <span>{formatDate(d)}</span>
+                <span>{weekdays[d.getDay() === 0 ? 6 : d.getDay() - 1]}</span>
               </div>
             );
           })}
         </div>
 
-        <button
-          className="right-calendar"
-          onClick={nextDateSlide}
-          disabled={dateSlide === totalSlides - 1}
-        >
+        <button className="right-calendar" onClick={nextWeek}>
           &#x276F;
         </button>
       </div>

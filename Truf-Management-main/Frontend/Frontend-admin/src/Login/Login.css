@@ -1,10 +1,11 @@
 .overall {
   display: flex;
-  padding-top: 100px;
+  
 }
 
 /* Left Side */
 .left-log {
+
   width: 60%;
   display: flex;
   align-items: center;
@@ -20,6 +21,7 @@
 
 /* Right Side */
 .right-log {
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +34,7 @@
 
 .login-form {
   padding: 20px 30px;
+  height: 800px;
   width: 500px;
   background-color: #2e2e2e;
   margin-bottom: 10px;

@@ -13,12 +13,20 @@ import { useRef, useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import User from "./Components/User";
 import Footer from "./Components/Footer";
+import { getIndianTime } from "./services/api";
+
+async function fetchTime() {
+  return new Date(await getIndianTime());
+}
+
+const currentDate = await fetchTime();
+
 
 function App() {
   const secondPageRef = useRef<HTMLDivElement>(null);
   const thirdPageRef = useRef<HTMLDivElement>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(currentDate));
   const { currentUser, loading } = useAuth();
 
   useEffect(() => {
