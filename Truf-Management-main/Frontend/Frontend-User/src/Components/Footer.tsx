@@ -48,7 +48,6 @@ const Footer: React.FC = () => {
                 <FaWhatsapp />
               </a>
 
-              {/* Pre-filled Gmail Compose Link */}
               <a
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=turrfzone7@gmail.com&su=Booking%20Inquiry&body=Hello%20Turf%20Zone,"
                 target="_blank"
